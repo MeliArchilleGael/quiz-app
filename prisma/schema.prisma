@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  access  Access[]
+  results Result[]
+  answers Answer[]
+}
+
+model Access {
+  id         String   @id @default(cuid())
+  user       User?    @relation(fields: [user_id], references: [id])
+  user_id    String?
+  start_date DateTime
+  end_date   DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Category {
+  id                 String @id @default(cuid())
+  category_name      String
+  point_per_question Int    @default(1)
+
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  questions  Question[]
+}
+
+model Question {
+  id                  String    @id @default(cuid())
+  category_id         String?
+  category            Category? @relation(fields: [category_id], references: [id])
+  title               String
+  question_type       String    @default("text")
+  media_link          String
+  duration_in_seconds Int       @default(10)
+  options             Option[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  subject    Subject? @relation(fields: [subject_id], references: [id])
+  subject_id String?
+  answers    Answer[]
+}
+
+model Option {
+  id String @id @default(cuid())
+
+  question_id String
+  question    Question @relation(fields: [question_id], references: [id])
+
+  option_text     String
+  is_correct      Boolean @default(false)
+  multiple_choice Boolean @default(false)
+  option_order    Int?
+
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  Answer       Answer?        @relation(fields: [answerId], references: [id])
+  answerId     String?
+  OptionChoose OptionChoose[]
+}
+
+model Subject {
+  id                  String     @id @default(cuid())
+  subject_name        String
+  description         String
+  duration_in_minutes Int
+  pass_score          Int
+  questions           Question[]
+  results             Result[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Answer {
+  id      String @id @default(cuid())
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  question_id String?
+  question    Question? @relation(fields: [question_id], references: [id])
+
+  option_choose Option[]
+
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+  option_chooses OptionChoose[]
+}
+
+model OptionChoose {
+  id        String  @id @default(cuid())
+  answer_id String?
+  answer    Answer? @relation(fields: [answer_id], references: [id])
+
+  option_id String?
+  option    Option? @relation(fields: [option_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Result {
+  id      String  @id @default(cuid())
+  user_id String?
+  user    User?   @relation(fields: [user_id], references: [id])
+
+  subject_id String?
+  subject    Subject? @relation(fields: [subject_id], references: [id])
+
+  user_score Int @default(0)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
