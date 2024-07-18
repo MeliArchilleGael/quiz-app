@@ -1,9 +1,10 @@
 "use client"
 import Link from "next/link";
-import { QuizItemProps, StepperProps} from "@/src/types/compoment";
+import {QuizItemProps, StepperProps} from "@/src/types/compoment";
 import Stepper from "@/src/components/subject/Stepper";
 import {useEffect, useState} from "react";
 import QuizItem from "@/src/components/subject/QuizItem";
+import Auth from "@/src/components/Auth";
 
 export default function SubjectDetails({params}: {
     params: { slug: string }
@@ -77,6 +78,881 @@ export default function SubjectDetails({params}: {
             optionType: "checkbox",
             link_audio: ""
         },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+
+        {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        }, {
+            id: 3,
+            options: [
+                {
+                    id: 1,
+                    text: "Here is the option 1"
+                },
+                {
+                    id: 2,
+                    text: "Here is the option 2"
+                },
+                {
+                    id: 3,
+                    text: "Here is the option 3"
+                }
+            ],
+            text: "Here is the question 3",
+            type: "text",
+            optionType: "checkbox",
+            link_audio: ""
+        },
+
     ]
 
     useEffect(() => {
@@ -127,9 +1003,9 @@ export default function SubjectDetails({params}: {
     }
 
     return (
-        <div>
+        <Auth>
             <div className="my-10">
-                <div className="flex items-center max-w-screen-lg mx-auto">
+                <div className="flex items-center max-w-screen-lg flex-wrap w-full mx-auto">
                     <Stepper steps={steps} goTo={goTo}/>
                 </div>
 
@@ -152,6 +1028,6 @@ export default function SubjectDetails({params}: {
                     </div>
                 </div>
             </div>
-        </div>
+        </Auth>
     )
 }

@@ -1,4 +1,7 @@
+"use client"
 import Link from "next/link";
+import {useSession} from "next-auth/react";
+import Auth from "@/src/components/Auth";
 
 type Subject = {
     title: string,
@@ -46,10 +49,10 @@ const subjects: Subject[] = [
     }
 ]
 
-export default function Page() {
+export default function SubjectDashboard() {
 
     return (
-        <div>
+        <Auth>
             <div className="relative font-sans bg-blue-500">
                 <div
                     className="min-h-[150px] md:min-h-[200px] relative z-50 h-full mx-auto flex flex-col justify-center items-center text-center text-white">
@@ -63,7 +66,7 @@ export default function Page() {
                     )}
                 </div>
             </div>
-        </div>
+        </Auth>
     )
 }
 
