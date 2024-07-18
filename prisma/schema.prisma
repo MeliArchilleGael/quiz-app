@@ -30,7 +30,7 @@ model Access {
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?
   startDate DateTime @default(now())
-  endDate  DateTime @default(now())
+  endDate   DateTime @default(now())
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -55,7 +55,9 @@ model Question {
   questionType      String    @default("text")
   mediaLink         String
   durationInSeconds Int       @default(10)
-  options           Option[]
+  multipleChoice    Boolean   @default(false)
+
+  options Option[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -71,10 +73,9 @@ model Option {
   questionId String
   question   Question @relation(fields: [questionId], references: [id])
 
-  optionText     String
-  isCorrect      Boolean @default(false)
-  multipleChoice Boolean @default(false)
-  optionOrder    Int?
+  optionText  String
+  isCorrect   Boolean @default(false)
+  optionOrder Int?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -87,6 +88,7 @@ model Option {
 model Subject {
   id                String     @id @default(cuid())
   subjectName       String
+  slug              String     @unique @default("")
   description       String
   durationInMinutes Int
   passScore         Int

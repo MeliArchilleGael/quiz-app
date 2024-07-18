@@ -2,54 +2,44 @@
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import Auth from "@/src/components/Auth";
+import {useEffect, useState} from "react";
 
 type Subject = {
-    title: string,
+    subjectName: string,
     description: string,
-    id: number,
+    id: string,
+    durationInMinutes: number,
     slug: string,
 }
 
-const subjects: Subject[] = [
-    {
-        id: 1,
-        title: "Here is the title ",
-        slug: "subject_1",
-        description: "Lorem ipsum kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfkn",
-    },
-    {
-        id: 1,
-        title: "Here is the title ",
-        slug: "subject_2",
-        description: "Lorem ipsum kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfkn kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfk kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfk kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfk",
-    },
-    {
-        id: 1,
-        title: "Here is the title ",
-        slug: "subject_3",
-        description: "Lorem ipsum kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfkn",
-    },
-    {
-        id: 1,
-        title: "Here is the title ",
-        slug: "subject_4",
-        description: "Lorem ipsum kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfkn",
-    },
-    {
-        id: 1,
-        title: "Here is the title ",
-        slug: "subject_5",
-        description: "Lorem ipsum kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfkn",
-    },
-    {
-        id: 1,
-        title: "Here is the title ",
-        slug: "subject_6",
-        description: "Lorem ipsum kljdlsfsnqs sdqfldsqhf sqdkhfzehdnfkn",
-    }
-]
-
 export default function SubjectDashboard() {
+
+    const [subjects, setSubjects] = useState([])
+
+    useEffect(() => {
+        const fetchData = async  () => {
+            try {
+                const subjects = await fetch(`/api/subject`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                const sub = await subjects.json()
+                console.log("Here are data ", sub)
+                setSubjects(sub.subjects)
+
+            }catch (error: any){
+                console.log("Error while fetching the data ", error)
+            }
+        }
+
+        fetchData()
+
+        return () => {
+        };
+    }, []);
 
     return (
         <Auth>
@@ -78,10 +68,11 @@ const CardSubject = ({subject}: {
     return (
         <Link href={"/dashboard/subject/"+subject.slug} type="div" className="bg-white cursor-pointer shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-sm md:max-w-md rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
             <div className="p-6">
-                <h3 className="text-lg font-semibold">{subject.title}</h3>
-                <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+                <h3 className="text-lg font-semibold">{subject.subjectName}</h3>
+                <p className="my-2 text-md text-gray-500 leading-relaxed">
                     {subject.description}
                 </p>
+                <p className="text-right font-bold text-sm">Durée : <span>{subject.durationInMinutes}</span> Minutes</p>
             </div>
         </Link>
     )

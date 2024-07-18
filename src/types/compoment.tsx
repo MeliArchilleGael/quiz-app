@@ -5,15 +5,17 @@ export type StepperProps = {
 }
 
 export type QuizItemProps = {
-    id: number,
+    id: string,
     options: OptionProps[],
-    text: string,
-    type: "audio" | "text" ,
-    optionType: "checkbox" | "radio",
-    link_audio ?: string
+    durationInSeconds: number,
+    title: string,
+    questionType: "audio" | "text" ,
+    multipleChoice: boolean,
+    mediaLink ?: string
 }
 
 export type OptionProps = {
-    id: number,
-    text: string,
+    id: string,
+    optionText: string,
+    isCorrect: boolean,
 }

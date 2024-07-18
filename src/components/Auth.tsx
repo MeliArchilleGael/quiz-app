@@ -11,7 +11,7 @@ export default function Auth({children}: {
     const router = useRouter()
     const pathname = usePathname();
 
-    console.log('Session on the auth component ', session)
+    //console.log('Session on the auth component ', session)
 
     useEffect(() => {
         if (!session && !session?.user) {
@@ -21,7 +21,6 @@ export default function Auth({children}: {
 
     useEffect(() => {
         const fetchData = async () => {
-
             try {
                 const userId = session?.user?.id
                 const res = await fetch(`/api/user/access?userId=${userId}`, {
@@ -32,7 +31,7 @@ export default function Auth({children}: {
                 });
 
                 const data = await res.json()
-                console.log("Fetch data call ",data.access)
+               // console.log("Fetch data call ",data.access)
                 if (data.access.length === 0) {
                     router.push("/no-access");
                 }else if (pathname==="/no-access")
