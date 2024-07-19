@@ -1,10 +1,11 @@
 "use client"
 import Link from "next/link";
-import {QuizItemProps, StepperProps} from "@/src/types/compoment";
+import {QuizItemProps, StepperProps, Subject} from "@/src/types/compoment";
 import Stepper from "@/src/components/subject/Stepper";
 import {useEffect, useState} from "react";
 import QuizItem from "@/src/components/subject/QuizItem";
 import Auth from "@/src/components/Auth";
+import QuestionTimer from "@/src/components/QuestionTimer";
 
 export default function SubjectDetails({params}: {
     params: { slug: string }
@@ -15,6 +16,8 @@ export default function SubjectDetails({params}: {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0)
 
     const [questions, setQuestions] = useState<QuizItemProps[]>([])
+
+    const [subject, setSubject] = useState<Subject>()
 
     useEffect(() => {
         const numberQuestion = questions.length
@@ -47,6 +50,7 @@ export default function SubjectDetails({params}: {
                 console.log("Here is the subject ", sub)
 
                 setQuestions([...sub.subject.questions])
+                setSubject({...sub.subject})
 
             }catch (error: any){
                 console.log("Error while fetching the data ", error)
@@ -92,6 +96,7 @@ export default function SubjectDetails({params}: {
             <div className="h-screen flex items-center justify-center">
                 {questions.length > 0 ?
                     <div>
+                        <QuestionTimer timer={subject?.durationInMinutes}/>
                         <div className="flex items-center flex-wrap w-full mx-auto">
                             <Stepper steps={steps} goTo={goTo}/>
                         </div>

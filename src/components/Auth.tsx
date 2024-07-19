@@ -1,6 +1,7 @@
 import React, {ReactNode, useEffect} from "react";
 import {useSession, signOut} from "next-auth/react";
 import {usePathname, useRouter} from "next/navigation";
+import {updateSession} from "@/src/actions/session";
 
 
 export default function Auth({children}: {
@@ -14,10 +15,10 @@ export default function Auth({children}: {
     //console.log('Session on the auth component ', session)
 
     useEffect(() => {
-        if (!session && !session?.user) {
+        if (!session && !session?.user && status !== "loading") {
             router.push("/")
         }
-    }, [session, router]);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,12 +31,19 @@ export default function Auth({children}: {
                     },
                 });
 
-                const data = await res.json()
-               // console.log("Fetch data call ",data.access)
-                if (data.access.length === 0) {
-                    router.push("/no-access");
-                }else if (pathname==="/no-access")
-                    router.push('/dashboard')
+                await res.json().then((data) => {
+
+                    console.log("Here is the data ", data)
+
+                    updateSession(data)
+
+                    if (data.access.length === 0) {
+                        router.push("/no-access");
+
+                    } else if (pathname === "/no-access")
+                        router.push('/dashboard')
+                })
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -49,7 +57,7 @@ export default function Auth({children}: {
         return () => {
             clearInterval(interval)
         };
-    }, []);
+    }, [status]);
 
 
     return (

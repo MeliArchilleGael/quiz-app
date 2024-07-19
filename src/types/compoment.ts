@@ -4,6 +4,16 @@ export type StepperProps = {
     lastElement?: boolean,
 }
 
+export type Subject = {
+    id: string,
+    questions: QuizItemProps[],
+    durationInMinutes: number,
+    passScore: number,
+    slug: string ,
+    subjectName: string,
+    description: string,
+}
+
 export type QuizItemProps = {
     id: string,
     options: OptionProps[],

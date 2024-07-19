@@ -5,6 +5,7 @@ import {ChangeEvent, useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {signIn} from "next-auth/react";
 import {useSession} from "next-auth/react"
+import {updateSession} from "@/src/actions/session"
 
 export default function LoginForm() {
 
@@ -44,7 +45,7 @@ export default function LoginForm() {
 
                 const data = await res.json()
 
-                await update({access: data.access[0]})
+                await updateSession(data)
 
                 if (data.access.length > 0) {
                     router.push(callbackUrl);
