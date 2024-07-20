@@ -33,7 +33,7 @@ export default function Auth({children}: {
 
                 await res.json().then((data) => {
 
-                    console.log("Here is the data ", data)
+                   // console.log("Here is the data ", data)
 
                     updateSession(data)
 

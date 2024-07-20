@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {formatRemainingTime} from "@/src/lib/util";
 
-function AccessTimer({timer}: {timer: number | 0 |undefined}) {
+function QuestionTimer({timer, label}: {timer: number , label: string}) {
     const [remainingTime, setRemainingTime] = useState<number>(0);
 
     useEffect(() => {
@@ -9,8 +9,9 @@ function AccessTimer({timer}: {timer: number | 0 |undefined}) {
         let interval: any
         const getEndDate = async () => {
             try {
+                let timeLeft = timer
                 interval = setInterval(() => {
-                    const timeLeft = timer
+                    timeLeft = timeLeft-1000
 
                     if (timeLeft <= 0) {
                         // Session has ended
@@ -31,16 +32,16 @@ function AccessTimer({timer}: {timer: number | 0 |undefined}) {
 
         // Clean up the interval when the component is unmounted
         return () => clearInterval(interval);
-    }, []);
+    }, [timer]);
 
     // Format the remaining time in a human-readable format
     const formattedRemainingTime = formatRemainingTime(remainingTime);
 
     return (
-        <h2 className="text-center text-lg">Temps restant :
+        <h2 className="text-center text-lg">{label} :
             <span className="font-bold"> {formattedRemainingTime}</span>
         </h2>
     );
 }
 
-export default AccessTimer;
+export default QuestionTimer;

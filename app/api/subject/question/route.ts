@@ -1,10 +1,10 @@
 import {NextResponse} from "next/server";
 import {prisma} from "@/src/lib/prisma";
 
-
 export async function  GET (req: Request) {
     const { searchParams } = new URL(req.url);
     const subjectSlug = searchParams.get('slug');
+    const userId = searchParams.get('userId');
 
     if (!subjectSlug) {
         return NextResponse.json(
@@ -16,8 +16,9 @@ export async function  GET (req: Request) {
         );
     }
 
-    try {
+    console.log("userId", userId)
 
+    try {
         const subject = await prisma.subject.findUnique({
             where: {
                 slug: subjectSlug,
@@ -25,6 +26,12 @@ export async function  GET (req: Request) {
             include: {
                 questions: {
                     include: {
+                        category: {
+                          select: {
+                              categoryName: true,
+                              pointPerQuestion: true,
+                          }
+                        },
                         options: {
                             select: {
                                 id: true,
@@ -33,6 +40,14 @@ export async function  GET (req: Request) {
                                 optionText: true,
                             }
                         }
+                    }
+                },
+                results: {
+                    select: {
+                        userScore: true,
+                    },
+                    where: {
+                        userId: userId
                     }
                 }
             }

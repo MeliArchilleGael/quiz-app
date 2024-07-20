@@ -8,7 +8,7 @@ export function formatRemainingTime(timeInMs: number): string {
 
     return [
         days > 0 ? `${days} jour${days > 1 ? 's' : ''}` : '',
-        hours.toString().padStart(2, '0'),
+        hours > 0 ? hours.toString().padStart(2, '0') : '',
         minutes.toString().padStart(2, '0'),
         seconds.toString().padStart(2, '0'),
     ]

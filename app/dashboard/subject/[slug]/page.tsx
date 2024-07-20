@@ -1,12 +1,13 @@
 "use client"
 import Link from "next/link";
-import {QuizItemProps, StepperProps, Subject} from "@/src/types/compoment";
+import {QuizItemProps, ResponseOption, StepperProps, Subject} from "@/src/types/compoment";
 import Stepper from "@/src/components/subject/Stepper";
 import {useEffect, useState} from "react";
 import QuizItem from "@/src/components/subject/QuizItem";
 import Auth from "@/src/components/Auth";
 import QuestionTimer from "@/src/components/QuestionTimer";
-
+import {calculateScore} from "@/src/actions/answer";
+import {useSession} from "next-auth/react";
 export default function SubjectDetails({params}: {
     params: { slug: string }
 }) {
@@ -18,6 +19,16 @@ export default function SubjectDetails({params}: {
     const [questions, setQuestions] = useState<QuizItemProps[]>([])
 
     const [subject, setSubject] = useState<Subject>()
+
+    const [subjectDurationInMilliseconds, setSubjectDurationInMilliseconds] = useState<number>()
+
+    const [answerOption, setAnswerOption] = useState<ResponseOption[]>([])
+
+    const [showRecap, setShowRecap] = useState<boolean>(false)
+
+    const [showScore, setShowScore] = useState(false)
+
+    const {data: session, status} = useSession();
 
     useEffect(() => {
         const numberQuestion = questions.length
@@ -37,31 +48,54 @@ export default function SubjectDetails({params}: {
     }, [questions.length]);
 
     useEffect(() => {
-        const fetchData = async  () => {
-            try {
-                const subject = await fetch(`/api/subject/question?slug=${params.slug}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
+        const fetchData = async () => {
+            const userId = session?.user?.id
+            if (userId) {
+                try {
+                    const subject = await fetch(`/api/subject/question?slug=${params.slug}&userId=${userId}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
 
-                const sub = await subject.json()
-                console.log("Here is the subject ", sub)
+                    const sub = await subject.json()
 
-                setQuestions([...sub.subject.questions])
-                setSubject({...sub.subject})
+                    console.log(sub)
 
-            }catch (error: any){
-                console.log("Error while fetching the data ", error)
+                    setQuestions([...sub.subject.questions])
+
+                    setSubject({...sub.subject})
+
+                    setSubjectDurationInMilliseconds(sub.subject.durationInMinutes * 60000)
+
+                } catch (error: any) {
+                    console.log("Error while fetching the data ", error)
+                }
             }
         }
 
         fetchData()
 
-    }, []);
+    }, [params.slug, session?.user]);
+
+    useEffect(() => {
+        const update = () => {
+            const result = subject?.results?.length
+            console.log("Here are the subject ", result)
+            if (result)
+                result > 0 ?
+                    setShowScore(true) : setShowScore(false)
+        }
+        update()
+    }, [subject]);
+
 
     const handleClickNext = () => {
+        if (showRecap) {
+            submitUserAnswer()
+            return
+        }
         let nextIndex = currentQuestionIndex
         if (currentQuestionIndex < questions.length - 1 /*&& questions[currentQuestionIndex].type!=="audio"*/) {
             nextIndex++
@@ -71,11 +105,58 @@ export default function SubjectDetails({params}: {
             let currentStep = steps[nextIndex]
             currentStep.active = true
 
+        } else {
+            setShowRecap(true)
+        }
+    }
+
+    const submitUserAnswer = async () => {
+
+        if (!showRecap) return
+
+        const userId = session?.user?.id
+
+        const data = await calculateScore(answerOption, userId, subject?.id)
+
+        const result = await saveAnswer(data.answers, data.result)
+
+        setShowRecap(true)
+
+        return
+    }
+
+    const saveAnswer = async (answers: any[], result: any) => {
+
+        try {
+            const data = {
+                answers: answers,
+                result: result
+            }
+            const res = await fetch("/api/subject/answer", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const rs = await res.json()
+
+           console.log("Here is the result ", rs)
+
+            return rs
+
+        } catch (error: any) {
+            console.log("Error while saving the result ", error)
         }
     }
 
     const handleClickPrev = () => {
         let prevIndex = currentQuestionIndex
+        if (showRecap) {
+            setShowRecap(false)
+            return
+        }
         if (currentQuestionIndex > 0 /*&& questions[currentQuestionIndex].type!=="audio"*/) {
             prevIndex--
             setCurrentQuestionIndex(prevIndex)
@@ -83,6 +164,7 @@ export default function SubjectDetails({params}: {
             let currentStep = steps[currentQuestionIndex]
             currentStep.active = false
         }
+
     }
 
     const goTo = (index: number) => {
@@ -91,37 +173,77 @@ export default function SubjectDetails({params}: {
         }
     }
 
+    const updateAnswer = (response: ResponseOption) => {
+        if (showRecap)
+            return
+        let answer = answerOption
+        answer[currentQuestionIndex] = response
+        answer[currentQuestionIndex].question = questions[currentQuestionIndex]
+        setAnswerOption([...answer])
+    }
+
+
     return (
         <Auth>
-            <div className="h-screen flex items-center justify-center">
-                {questions.length > 0 ?
-                    <div>
-                        <QuestionTimer timer={subject?.durationInMinutes}/>
-                        <div className="flex items-center flex-wrap w-full mx-auto">
-                            <Stepper steps={steps} goTo={goTo}/>
-                        </div>
+            <div className="my-20 flex items-center justify-center">
+                {!showScore ?
+                    questions.length > 0 ?
+                        <div>
+                            <QuestionTimer label="Fin du suject dans " timer={subjectDurationInMilliseconds}/>
+                            <div className="flex items-center flex-wrap w-full mx-auto">
+                                <Stepper steps={steps} goTo={goTo}/>
+                            </div>
 
-                        <div className="mt-8">
-                            <div className="flex justify-center flex-col items-center gap-8">
+                            <div className="mt-8">
+                                <div className="flex justify-center flex-col items-center gap-8">
 
-                                <QuizItem question={questions[currentQuestionIndex]}/>
+                                    {showRecap ?
+                                        answerOption.map((answer: ResponseOption, index: number) =>
+                                            <QuizItem key={index} handleClickOption={
+                                                (data) => {
+                                                    updateAnswer(data)
+                                                }}
+                                                      question={answer.question}
+                                                      answer={answer}
+                                            />)
+                                        :
+                                        <QuizItem
+                                            handleClickOption={
+                                                (data) => {
+                                                    updateAnswer(data)
+                                                }}
+                                            question={questions[currentQuestionIndex]}
+                                            answer={answerOption[currentQuestionIndex]}
+                                        />
+                                    }
 
-                                <div className="flex gap-8 ">
-                                    <button onClick={handleClickPrev}
-                                            className="border-2 bg-red-600 text-white px-8 py-2 rounded-md">
-                                        Prev
-                                    </button>
-                                    <button onClick={handleClickNext}
-                                            className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
-                                        Next
-                                    </button>
+
+                                    <div className="flex gap-8 ">
+                                        <button onClick={handleClickPrev}
+                                                className="border-2 bg-red-600 text-white px-8 py-2 rounded-md">
+                                            Prev
+                                        </button>
+                                        <button onClick={handleClickNext}
+                                                className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
+                                            Next
+                                        </button>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    :
-                    <div>
+                        :
+                        <div>
+                            {/* <div className="bg-white border-2 rounded-md shadow-2xl p-8">
+                            <p className="text-center py-5">Pas de question dans ce subjet </p>
+                        </div>*/}
+                        </div>
 
+                    :
+                    <div className="bg-white border-2 rounded-xl shadow-2xl p-8">
+                        <p className="text-center py-5"> Vos réponses on été enregistré avec sucess </p>
+                        <p className="text-center py-5"> Redirection a la page d'accueil dans : </p>
                     </div>
                 }
             </div>
