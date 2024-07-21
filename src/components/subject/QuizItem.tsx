@@ -64,7 +64,7 @@ export default function QuizItem({question, handleClickOption, answer, showGoodA
 
     return (
         <div
-            className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-full  rounded-lg font-[sans-serif] overflow-hidden mt-4">
+            className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-full max-w-[90%]  rounded-lg font-[sans-serif] overflow-hidden mt-4">
             <div className="p-6 relative">
                 <h3 className="text-lg font-semibold">{question.title}</h3>
 
@@ -89,7 +89,7 @@ export default function QuizItem({question, handleClickOption, answer, showGoodA
                     <div className="flex flex-col items-center gap-5 h-full mt-5">
                         {question.questionType === "multimedia" && question.mediaType === 'image' &&
                             <div className="">
-                                <Image width={700} height={500} src={question.mediaLink} alt="image de la question "/>
+                                <Image width={500} height={500} src={question.mediaLink} alt="image de la question "/>
                             </div>
                         }
                         <div className="flex flex-col gap-3 w-full">
