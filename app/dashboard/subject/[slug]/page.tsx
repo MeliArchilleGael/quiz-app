@@ -7,6 +7,7 @@ import Auth from "@/src/components/Auth";
 import QuestionTimer from "@/src/components/QuestionTimer";
 import {calculateScore, ReadResult} from "@/src/actions/answer";
 import {useSession} from "next-auth/react";
+import Spinner from "@/src/components/ui/Spinner";
 
 export default function SubjectDetails({params}: {
     params: { slug: string }
@@ -32,6 +33,9 @@ export default function SubjectDetails({params}: {
 
     const {data: session, status} = useSession();
 
+    const [loadingSaveAnswers, setLoadingSaveAnswers] = useState(false)
+    const [loadingReadData, setLoadingReadData] = useState(false)
+
     useEffect(() => {
         const numberQuestion = questions.length
         if (numberQuestion > 0) {
@@ -54,6 +58,7 @@ export default function SubjectDetails({params}: {
             const userId = session?.user?.id
             if (userId) {
                 try {
+                    setLoadingReadData(true)
                     const subject = await fetch(`/api/subject/question?slug=${params.slug}&userId=${userId}`, {
                         method: "GET",
                         headers: {
@@ -69,8 +74,11 @@ export default function SubjectDetails({params}: {
 
                     setSubjectDurationInMilliseconds(sub.subject.durationInMinutes * 60000)
 
+                    setLoadingReadData(false)
+
                 } catch (error: any) {
                     console.log("Error while fetching the data ", error)
+                    setLoadingReadData(false)
                 }
             }
         }
@@ -131,6 +139,8 @@ export default function SubjectDetails({params}: {
 
     const submitUserAnswer = async () => {
 
+        setLoadingSaveAnswers(true)
+
         const userId = session?.user?.id
 
         const data = await calculateScore(answerOption, userId, subject?.id)
@@ -138,6 +148,8 @@ export default function SubjectDetails({params}: {
         const result = await saveAnswer(data.answers, data.result)
 
         setShowScore(true)
+
+        setLoadingSaveAnswers(false)
         console.log("Here is the result ", result)
         return
     }
@@ -208,82 +220,89 @@ export default function SubjectDetails({params}: {
     return (
         <Auth>
             <div className="min-h-screen my-5 flex min-w-full items-center justify-center">
-                {!showScore ?
-                    questions.length > 0 ?
-                        <div>
-                            <QuestionTimer timeEnd={TimeEndSubject} label="Fin du suject dans "
-                                           timer={subjectDurationInMilliseconds}/>
-                            <div className="flex items-center flex-wrap w-full mx-auto">
-                                <Stepper steps={steps} goTo={goTo}/>
-                            </div>
+                {loadingReadData ?
+                    <Spinner className="h-7 w-7 text-green-500"/>
+                    :
+                    !showScore ?
+                        questions.length > 0 ?
+                            <div>
+                                <QuestionTimer timeEnd={TimeEndSubject} label="Fin du suject dans "
+                                               timer={subjectDurationInMilliseconds}/>
+                                <div className="flex items-center flex-wrap w-full mx-auto">
+                                    <Stepper steps={steps} goTo={goTo}/>
+                                </div>
 
-                            <div className="mt-8">
-                                <div className="flex justify-center flex-col items-center gap-8">
+                                <div className="mt-8">
+                                    <div className="flex justify-center flex-col items-center gap-8">
 
-                                    {showRecap ?
-                                        answerOption.map((answer: ResponseOption, index: number) =>
-                                            <QuizItem key={index} handleClickOption={
-                                                (data) => {
-                                                    updateAnswer(data)
-                                                }}
-                                                      question={answer.question}
-                                                      answer={answer}
-                                                      showingRecap={showRecap}
-                                                      questionTimeEnded={TimeQuestionEnd}
-                                            />)
-                                        :
-                                        <QuizItem
-                                            handleClickOption={
-                                                (data) => {
-                                                    updateAnswer(data)
-                                                }}
-                                            question={questions[currentQuestionIndex]}
-                                            answer={answerOption[currentQuestionIndex]}
-                                            questionTimeEnded={TimeQuestionEnd}
-                                        />
-                                    }
+                                        {showRecap ?
+                                            answerOption.map((answer: ResponseOption, index: number) =>
+                                                <QuizItem key={index} handleClickOption={
+                                                    (data) => {
+                                                        updateAnswer(data)
+                                                    }}
+                                                          question={answer.question}
+                                                          answer={answer}
+                                                          showingRecap={showRecap}
+                                                          questionTimeEnded={TimeQuestionEnd}
+                                                />)
+                                            :
+                                            <QuizItem
+                                                handleClickOption={
+                                                    (data) => {
+                                                        updateAnswer(data)
+                                                    }}
+                                                question={questions[currentQuestionIndex]}
+                                                answer={answerOption[currentQuestionIndex]}
+                                                questionTimeEnded={TimeQuestionEnd}
+                                            />
+                                        }
 
-                                    {(showRecap || (currentQuestionIndex > 0 && questions[currentQuestionIndex].mediaType !== "audio")) &&
-                                        <div className="flex gap-8 ">
-                                            <button onClick={handleClickPrev}
-                                                    className="border-2 bg-red-600 text-white px-8 py-2 rounded-md">
-                                                Prev
-                                            </button>
-                                            <button onClick={handleClickNext}
-                                                    className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
-                                                {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
-                                            </button>
-                                        </div>
-                                    }
+                                        {(showRecap || (questions[currentQuestionIndex].mediaType !== "audio")) &&
+                                            <div className="flex gap-8 ">
+                                                {currentQuestionIndex > 0 &&
+                                                    <button disabled={loadingSaveAnswers} onClick={handleClickPrev}
+                                                            className={`border-2 bg-red-600 text-white px-8 py-2 rounded-md cursor-pointer ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                                        Prev
+                                                    </button>
+                                                }
+                                                <button disabled={loadingSaveAnswers} onClick={handleClickNext}
+                                                        className={`border-2 bg-blue-800 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                                    {loadingSaveAnswers && <Spinner/>}
+                                                    {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        :
-                        <div>
-                            {/* <div className="bg-white border-2 rounded-md shadow-2xl p-8">
-                            <p className="text-center py-5">Pas de question dans ce subjet </p>
-                        </div>*/}
-                        </div>
+                            :
+                            <div>
+                                {/*<div className="bg-white border-2 rounded-md shadow-2xl p-8">
+                                    <p className="text-center py-5">Pas de question dans ce subjet </p>
+                                </div>*/}
+                            </div>
 
-                    :
-                    <div className="flex justify-center flex-col items-center gap-8">
-                        {
-                            answerOption.map((answer: ResponseOption, index: number) =>
-                                <QuizItem key={index} handleClickOption={
-                                    (data) => {
-                                        updateAnswer(data)
-                                    }}
-                                          question={answer.question}
-                                          answer={answer}
-                                          showGoodAnswer={showScore}
-                                          questionTimeEnded={TimeQuestionEnd}
-                                />
-                            )
-                        }
-                    </div>
+                        :
+                        <div className="flex justify-center flex-col items-center gap-8">
+                            {answerOption.map((answer: ResponseOption, index: number) =>
+                                    <QuizItem key={index} handleClickOption={
+                                        (data) => {
+                                            updateAnswer(data)
+                                        }}
+                                              question={answer.question}
+                                              answer={answer}
+                                              showGoodAnswer={showScore}
+                                              questionTimeEnded={TimeQuestionEnd}
+                                    />
+                                )
+                            }
+                        </div>
                     /*<div className="bg-white border-2 rounded-xl shadow-2xl p-8">
                         <p className="text-center py-5"> Vos réponses on été enregistré avec sucess </p>
                     </div>*/
+
+
                 }
             </div>
         </Auth>
