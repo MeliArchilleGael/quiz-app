@@ -54,7 +54,7 @@ export default function SubjectDashboard() {
             </div>
             <div className="my-8 px-4 md:px-8">
 
-                <div className="flex flex-wrap justify-start gap-y-8 ">
+                <div className="grid grid-cols-3 gap-5">
                     {subjects.map((subject: Subject, index: number) =>
                         <CardSubject key={index} subject={subject}/>
                     )}
@@ -70,8 +70,9 @@ const CardSubject = ({subject}: {
 }) => {
 
     return (
+
         <Link href={"/dashboard/subject/" + subject.slug} type="div"
-              className="bg-white cursor-pointer shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-sm md:max-w-md rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
+              className="bg-white cursor-pointer shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full col-span-3 md:col-span-2 lg:col-span-1 rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4">
             <div className="p-6">
                 <h3 className="text-lg font-semibold">{subject.subjectName}</h3>
                 <p className="my-2 text-md text-gray-500 leading-relaxed">

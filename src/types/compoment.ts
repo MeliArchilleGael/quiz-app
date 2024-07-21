@@ -20,9 +20,10 @@ export type QuizItemProps = {
     options: OptionProps[],
     durationInSeconds: number,
     title: string,
-    questionType: "audio" | "text",
+    questionType: "multimedia" | "text",
     multipleChoice: boolean,
     mediaLink?: string,
+    mediaType?: "audio" | "image",
     category?: Category,
     answers?: ResponseAnswer[]
 }

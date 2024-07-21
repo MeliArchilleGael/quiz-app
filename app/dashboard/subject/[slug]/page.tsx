@@ -1,6 +1,5 @@
 "use client"
-import Link from "next/link";
-import {OptionProps, QuizItemProps, ResponseOption, StepperProps, Subject} from "@/src/types/compoment";
+import {QuizItemProps, ResponseOption, StepperProps, Subject} from "@/src/types/compoment";
 import Stepper from "@/src/components/subject/Stepper";
 import {useEffect, useState} from "react";
 import QuizItem from "@/src/components/subject/QuizItem";
@@ -89,7 +88,7 @@ export default function SubjectDetails({params}: {
             if (results && questions)
                 if (results?.length > 0 && questions.length > 0) {
 
-                   const result =  await ReadResult(questions)
+                    const result = await ReadResult(questions)
 
                     console.log("Here is are answer formated ", result)
 
@@ -153,11 +152,7 @@ export default function SubjectDetails({params}: {
                 },
             });
 
-            const rs = await res.json()
-
-            console.log("Here is the result ", rs)
-
-            return rs
+            return await res.json()
 
         } catch (error: any) {
             console.log("Error while saving the result ", error)
@@ -198,7 +193,7 @@ export default function SubjectDetails({params}: {
 
     return (
         <Auth>
-            <div className="min-h-screen my-20 flex items-center justify-center">
+            <div className="min-h-screen my-5 flex items-center justify-center">
                 {!showScore ?
                     questions.length > 0 ?
                         <div>
@@ -218,6 +213,7 @@ export default function SubjectDetails({params}: {
                                                 }}
                                                       question={answer.question}
                                                       answer={answer}
+                                                      showingRecap={showRecap}
                                             />)
                                         :
                                         <QuizItem

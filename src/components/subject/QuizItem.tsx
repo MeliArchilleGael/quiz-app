@@ -2,13 +2,15 @@ import {OptionProps, QuizItemProps, ResponseOption} from "@/src/types/compoment"
 import {useEffect, useState} from "react";
 import Option from "@/src/components/subject/Options";
 import QuestionTimer from "@/src/components/QuestionTimer";
+import Image from "next/image";
 
 
-export default function QuizItem({question, handleClickOption, answer, showGoodAnswer}: {
+export default function QuizItem({question, handleClickOption, answer, showGoodAnswer = false, showingRecap = false}: {
     question: QuizItemProps,
     handleClickOption: (data: ResponseOption) => void,
     answer: ResponseOption,
     showGoodAnswer?: boolean
+    showingRecap?: boolean
 }) {
 
     const [readingAudio, setReadingAudio] = useState<boolean>(false)
@@ -17,11 +19,9 @@ export default function QuizItem({question, handleClickOption, answer, showGoodA
         idOptions: answer?.idOptions ?? []
     })
 
-    const [point, setPoint] = useState<number>(0)
-
 
     useEffect(() => {
-        setReadingAudio(question.questionType === 'audio')
+        setReadingAudio(question.questionType === 'multimedia' && question.mediaType === "audio")
 
         const update = async () => {
             const n = {
@@ -63,34 +63,46 @@ export default function QuizItem({question, handleClickOption, answer, showGoodA
 
 
     return (
-        <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-2xl rounded-lg font-[sans-serif] overflow-hidden mt-4">
+        <div
+            className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-full  rounded-lg font-[sans-serif] overflow-hidden mt-4">
             <div className="p-6 relative">
                 <h3 className="text-lg font-semibold">{question.title}</h3>
 
-                {question.questionType === "audio" &&
+                {question.questionType === "multimedia" && question.mediaType === "audio" &&
                     <div>
                         <div className="flex justify-center items-center">
-                            <video className=" h-[80px] w-full" controls={true} autoPlay={false} onEnded={readingEnded}>
+                            <video className=" h-[90px] w-full" controls={true}
+                                   autoPlay={!(showGoodAnswer || showingRecap)} onEnded={readingEnded}>
                                 <source src={question.mediaLink} type="audio/mpeg"/>
                             </video>
                         </div>
 
                         {!readingAudio &&
-                            <QuestionTimer label="Fin du suject dans " timer={question.durationInSeconds * 1000}/>}
+                            <div className="my-3">
+                                <QuestionTimer label="Fin de la question dans "
+                                               timer={question.durationInSeconds * 1000}/>
+                            </div>}
                     </div>
                 }
 
-                {!readingAudio &&
-                    <div className="flex flex-col gap-3 mt-5">
-                        {question.options.map((option: OptionProps, index: number) =>
-                            <Option key={index} option={option}
-                                    handleClickOption={(option) => handleLocalClickOption(option)}
-                                    idQuestion={question.id}
-                                    multipleChoice={question.multipleChoice}
-                                    idOptions={response.idOptions}
-                                    showGoodAnswer={showGoodAnswer}
-                            />
-                        )}
+                {(!readingAudio || showGoodAnswer || showingRecap) &&
+                    <div className="flex flex-col items-center gap-5 h-full mt-5">
+                        {question.questionType === "multimedia" && question.mediaType === 'image' &&
+                            <div className="">
+                                <Image width={700} height={500} src={question.mediaLink} alt="image de la question "/>
+                            </div>
+                        }
+                        <div className="flex flex-col gap-3 w-full">
+                            {question.options.map((option: OptionProps, index: number) =>
+                                <Option key={index} option={option}
+                                        handleClickOption={(option) => handleLocalClickOption(option)}
+                                        idQuestion={question.id}
+                                        multipleChoice={question.multipleChoice}
+                                        idOptions={response.idOptions}
+                                        showGoodAnswer={showGoodAnswer}
+                                />
+                            )}
+                        </div>
                     </div>
                 }
             </div>

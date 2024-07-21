@@ -54,8 +54,8 @@ model Question {
   title             String
   questionType      String    @default("text")
   mediaLink         String?
-  mediaType         String    @default("audio")
-  durationInSeconds Int       @default(10)
+  mediaType         String?
+  durationInSeconds Int?
   multipleChoice    Boolean   @default(false)
 
   options Option[]
