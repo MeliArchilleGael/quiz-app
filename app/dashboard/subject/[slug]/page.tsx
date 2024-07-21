@@ -111,15 +111,24 @@ export default function SubjectDetails({params}: {
         }
         let nextIndex = currentQuestionIndex
         if (currentQuestionIndex < questions.length - 1 /*&& questions[currentQuestionIndex].type!=="audio"*/) {
-            nextIndex++
-            setCurrentQuestionIndex(nextIndex)
 
+            nextIndex++
+
+            setCurrentQuestionIndex(nextIndex)
             //update the stepper
             let currentStep = steps[nextIndex]
+
             currentStep.active = true
 
         } else {
             setShowRecap(true)
+        }
+        if (currentQuestionIndex <= questions.length - 1 /*&& questions[currentQuestionIndex].type!=="audio"*/) {
+            const currentAnswer = answerOption[currentQuestionIndex]
+            if (!currentAnswer) {
+                console.log("One ", currentAnswer)
+                updateAnswer({idOptions: [], question: questions[currentQuestionIndex]})
+            }
         }
     }
 
@@ -228,10 +237,12 @@ export default function SubjectDetails({params}: {
 
 
                                     <div className="flex gap-8 ">
-                                        <button onClick={handleClickPrev}
-                                                className="border-2 bg-red-600 text-white px-8 py-2 rounded-md">
-                                            Prev
-                                        </button>
+                                        {(showRecap || (currentQuestionIndex>0 && questions[currentQuestionIndex].mediaType!=="audio")) &&
+                                            <button onClick={handleClickPrev}
+                                                    className="border-2 bg-red-600 text-white px-8 py-2 rounded-md">
+                                                Prev
+                                            </button>
+                                        }
                                         <button onClick={handleClickNext}
                                                 className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
                                             {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}

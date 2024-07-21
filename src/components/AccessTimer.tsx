@@ -44,7 +44,7 @@ function AccessTimer() {
     const formattedRemainingTime = formatRemainingTime(remainingTime);
 
     return (
-        <h2 className="text-center text-lg">Access will expire in :
+        <h2 className="text-center text-lg">Votre accéss a la plateforme expire dans :
             <span className="font-bold"> {formattedRemainingTime}</span>
         </h2>
     );

@@ -61,7 +61,7 @@ export default function Auth({children}: {
 
 
     return (
-        <div>
+        <div className="mx-2 md:mx-0">
             {children}
         </div>
     )
