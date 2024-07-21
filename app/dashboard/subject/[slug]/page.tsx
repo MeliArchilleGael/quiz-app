@@ -28,6 +28,8 @@ export default function SubjectDetails({params}: {
 
     const [showScore, setShowScore] = useState(false)
 
+    const [timeEnd, setTimeEnd] = useState(false)
+
     const {data: session, status} = useSession();
 
     useEffect(() => {
@@ -61,8 +63,6 @@ export default function SubjectDetails({params}: {
 
                     const sub = await subject.json()
 
-                    console.log(sub)
-
                     setQuestions([...sub.subject.questions])
 
                     setSubject({...sub.subject})
@@ -77,20 +77,17 @@ export default function SubjectDetails({params}: {
 
         fetchData()
 
-    }, [params.slug, session?.user]);
+    }, [params.slug, session?.user, showScore]);
 
     useEffect(() => {
         const update = async () => {
             const results = subject?.results
             const questions = subject?.questions
 
-            console.log("Here is the subject ", subject)
             if (results && questions)
                 if (results?.length > 0 && questions.length > 0) {
 
                     const result = await ReadResult(questions)
-
-                    console.log("Here is are answer formated ", result)
 
                     setAnswerOption(result)
 
@@ -134,8 +131,6 @@ export default function SubjectDetails({params}: {
 
     const submitUserAnswer = async () => {
 
-        if (!showRecap) return
-
         const userId = session?.user?.id
 
         const data = await calculateScore(answerOption, userId, subject?.id)
@@ -143,7 +138,7 @@ export default function SubjectDetails({params}: {
         const result = await saveAnswer(data.answers, data.result)
 
         setShowScore(true)
-
+        console.log("Here is the result ", result)
         return
     }
 
@@ -191,7 +186,7 @@ export default function SubjectDetails({params}: {
     }
 
     const updateAnswer = (response: ResponseOption) => {
-        if (showRecap)
+        if (showRecap || showScore)
             return
         let answer = answerOption
         answer[currentQuestionIndex] = response
@@ -199,14 +194,25 @@ export default function SubjectDetails({params}: {
         setAnswerOption([...answer])
     }
 
+    const TimeEndSubject = async () => {
+        await setTimeEnd(true)
+        await submitUserAnswer()
+    }
+
+    const TimeQuestionEnd = () => {
+        handleClickNext()
+
+        //console.log("Question time end & next call ")
+    }
 
     return (
         <Auth>
-            <div className="min-h-screen my-5 flex items-center justify-center">
+            <div className="min-h-screen my-5 flex min-w-full items-center justify-center">
                 {!showScore ?
                     questions.length > 0 ?
                         <div>
-                            <QuestionTimer label="Fin du suject dans " timer={subjectDurationInMilliseconds}/>
+                            <QuestionTimer timeEnd={TimeEndSubject} label="Fin du suject dans "
+                                           timer={subjectDurationInMilliseconds}/>
                             <div className="flex items-center flex-wrap w-full mx-auto">
                                 <Stepper steps={steps} goTo={goTo}/>
                             </div>
@@ -223,6 +229,7 @@ export default function SubjectDetails({params}: {
                                                       question={answer.question}
                                                       answer={answer}
                                                       showingRecap={showRecap}
+                                                      questionTimeEnded={TimeQuestionEnd}
                                             />)
                                         :
                                         <QuizItem
@@ -232,24 +239,22 @@ export default function SubjectDetails({params}: {
                                                 }}
                                             question={questions[currentQuestionIndex]}
                                             answer={answerOption[currentQuestionIndex]}
+                                            questionTimeEnded={TimeQuestionEnd}
                                         />
                                     }
 
-
-                                    <div className="flex gap-8 ">
-                                        {(showRecap || (currentQuestionIndex>0 && questions[currentQuestionIndex].mediaType!=="audio")) &&
+                                    {(showRecap || (currentQuestionIndex > 0 && questions[currentQuestionIndex].mediaType !== "audio")) &&
+                                        <div className="flex gap-8 ">
                                             <button onClick={handleClickPrev}
                                                     className="border-2 bg-red-600 text-white px-8 py-2 rounded-md">
                                                 Prev
                                             </button>
-                                        }
-                                        <button onClick={handleClickNext}
-                                                className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
-                                            {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
-                                        </button>
-                                    </div>
-
-
+                                            <button onClick={handleClickNext}
+                                                    className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
+                                                {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
+                                            </button>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -271,6 +276,7 @@ export default function SubjectDetails({params}: {
                                           question={answer.question}
                                           answer={answer}
                                           showGoodAnswer={showScore}
+                                          questionTimeEnded={TimeQuestionEnd}
                                 />
                             )
                         }

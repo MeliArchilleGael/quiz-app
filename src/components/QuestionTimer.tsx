@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {formatRemainingTime} from "@/src/lib/util";
 
-function QuestionTimer({timer, label}: {timer: number , label: string}) {
+function QuestionTimer({timer, label, timeEnd}: { timer: number, label: string, timeEnd: () => void }) {
     const [remainingTime, setRemainingTime] = useState<number>(0);
 
     useEffect(() => {
@@ -11,12 +11,13 @@ function QuestionTimer({timer, label}: {timer: number , label: string}) {
             try {
                 let timeLeft = timer
                 interval = setInterval(() => {
-                    timeLeft = timeLeft-1000
+                    timeLeft = timeLeft - 1000
 
                     if (timeLeft <= 0) {
                         // Session has ended
                         clearInterval(interval);
                         setRemainingTime(0);
+                        timeEnd();
                     } else {
                         setRemainingTime(timeLeft);
                     }
