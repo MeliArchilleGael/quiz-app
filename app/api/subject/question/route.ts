@@ -6,7 +6,7 @@ export async function  GET (req: Request) {
     const subjectSlug = searchParams.get('slug');
     const userId = searchParams.get('userId');
 
-    if (!subjectSlug) {
+    if (!subjectSlug || !userId) {
         return NextResponse.json(
             {
                 status: 'error',
@@ -39,6 +39,18 @@ export async function  GET (req: Request) {
                                 optionOrder: true,
                                 optionText: true,
                             }
+                        },
+                        answers: {
+                            where: {
+                                userId: userId
+                            },
+                            include: {
+                                optionChoose: {
+                                    include: {
+                                        option: true
+                                    }
+                                }
+                            }
                         }
                     }
                 },
@@ -49,7 +61,7 @@ export async function  GET (req: Request) {
                     where: {
                         userId: userId
                     }
-                }
+                },
             }
         })
 

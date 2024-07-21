@@ -53,7 +53,8 @@ model Question {
   category          Category? @relation(fields: [categoryId], references: [id])
   title             String
   questionType      String    @default("text")
-  mediaLink         String
+  mediaLink         String?
+  mediaType         String    @default("audio")
   durationInSeconds Int       @default(10)
   multipleChoice    Boolean   @default(false)
 
@@ -80,8 +81,6 @@ model Option {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  answer       Answer?        @relation(fields: [answerId], references: [id])
-  answerId     String?
   optionChoose OptionChoose[]
 }
 
@@ -107,11 +106,9 @@ model Answer {
   questionId String?
   question   Question? @relation(fields: [questionId], references: [id])
 
-  optionChoose Option[]
-
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime       @updatedAt @map("updated_at")
-  option_chooses OptionChoose[]
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  optionChoose OptionChoose[]
 }
 
 model OptionChoose {

@@ -1,13 +1,14 @@
 "use client"
 import Link from "next/link";
-import {QuizItemProps, ResponseOption, StepperProps, Subject} from "@/src/types/compoment";
+import {OptionProps, QuizItemProps, ResponseOption, StepperProps, Subject} from "@/src/types/compoment";
 import Stepper from "@/src/components/subject/Stepper";
 import {useEffect, useState} from "react";
 import QuizItem from "@/src/components/subject/QuizItem";
 import Auth from "@/src/components/Auth";
 import QuestionTimer from "@/src/components/QuestionTimer";
-import {calculateScore} from "@/src/actions/answer";
+import {calculateScore, ReadResult} from "@/src/actions/answer";
 import {useSession} from "next-auth/react";
+
 export default function SubjectDetails({params}: {
     params: { slug: string }
 }) {
@@ -80,12 +81,25 @@ export default function SubjectDetails({params}: {
     }, [params.slug, session?.user]);
 
     useEffect(() => {
-        const update = () => {
-            const result = subject?.results?.length
-            console.log("Here are the subject ", result)
-            if (result)
-                result > 0 ?
-                    setShowScore(true) : setShowScore(false)
+        const update = async () => {
+            const results = subject?.results
+            const questions = subject?.questions
+
+            console.log("Here is the subject ", subject)
+            if (results && questions)
+                if (results?.length > 0 && questions.length > 0) {
+
+                   const result =  await ReadResult(questions)
+
+                    console.log("Here is are answer formated ", result)
+
+                    setAnswerOption(result)
+
+                    setShowScore(true)
+
+                } else {
+                    setShowScore(false)
+                }
         }
         update()
     }, [subject]);
@@ -120,13 +134,12 @@ export default function SubjectDetails({params}: {
 
         const result = await saveAnswer(data.answers, data.result)
 
-        setShowRecap(true)
+        setShowScore(true)
 
         return
     }
 
     const saveAnswer = async (answers: any[], result: any) => {
-
         try {
             const data = {
                 answers: answers,
@@ -142,7 +155,7 @@ export default function SubjectDetails({params}: {
 
             const rs = await res.json()
 
-           console.log("Here is the result ", rs)
+            console.log("Here is the result ", rs)
 
             return rs
 
@@ -185,7 +198,7 @@ export default function SubjectDetails({params}: {
 
     return (
         <Auth>
-            <div className="my-20 flex items-center justify-center">
+            <div className="min-h-screen my-20 flex items-center justify-center">
                 {!showScore ?
                     questions.length > 0 ?
                         <div>
@@ -225,7 +238,7 @@ export default function SubjectDetails({params}: {
                                         </button>
                                         <button onClick={handleClickNext}
                                                 className="border-2 bg-blue-800 text-white px-8 py-2 rounded-md">
-                                            Next
+                                            {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
                                         </button>
                                     </div>
 
@@ -241,10 +254,23 @@ export default function SubjectDetails({params}: {
                         </div>
 
                     :
-                    <div className="bg-white border-2 rounded-xl shadow-2xl p-8">
-                        <p className="text-center py-5"> Vos réponses on été enregistré avec sucess </p>
-                        <p className="text-center py-5"> Redirection a la page d'accueil dans : </p>
+                    <div className="flex justify-center flex-col items-center gap-8">
+                        {
+                            answerOption.map((answer: ResponseOption, index: number) =>
+                                <QuizItem key={index} handleClickOption={
+                                    (data) => {
+                                        updateAnswer(data)
+                                    }}
+                                          question={answer.question}
+                                          answer={answer}
+                                          showGoodAnswer={showScore}
+                                />
+                            )
+                        }
                     </div>
+                    /*<div className="bg-white border-2 rounded-xl shadow-2xl p-8">
+                        <p className="text-center py-5"> Vos réponses on été enregistré avec sucess </p>
+                    </div>*/
                 }
             </div>
         </Auth>

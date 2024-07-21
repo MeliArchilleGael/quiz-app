@@ -7,9 +7,18 @@ type PropsType = {
     multipleChoice: boolean,
     handleClickOption: (option: OptionProps) => void,
     idOptions: string[]
+    showGoodAnswer?: boolean
 }
 
-export default function Option({option, idQuestion, multipleChoice, handleClickOption, idOptions}: PropsType) {
+export default function Option(
+    {
+        option,
+        idQuestion,
+        multipleChoice,
+        handleClickOption,
+        idOptions,
+        showGoodAnswer
+    }: PropsType) {
 
     const id = option.id + idQuestion
     const handleLocalClickOption = (option: OptionProps) => {
@@ -25,7 +34,9 @@ export default function Option({option, idQuestion, multipleChoice, handleClickO
 
 
     return (
-        <label onClick={() => handleLocalClickOption(option)} htmlFor={`item-${id}`} className="flex cursor-pointer gap-2 py-2 border-2 px-3 rounded-md">
+        <label onClick={() => handleLocalClickOption(option)} htmlFor={`item-${id}`}
+               className={`flex cursor-pointer gap-2 py-2 border-2 px-3 rounded-md ${showGoodAnswer ? (idOptions.includes(option.id) ? (option.isCorrect ? 'border-green-500' : 'border-red-500') : (option.isCorrect ? 'border-green-500' : '')) : ''}`}>
+
             <input type={multipleChoice ? "checkbox" : "radio"}
                    name={`choice_${idQuestion}`} id={`item-${id}`}
                    readOnly

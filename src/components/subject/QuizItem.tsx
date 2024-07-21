@@ -4,10 +4,11 @@ import Option from "@/src/components/subject/Options";
 import QuestionTimer from "@/src/components/QuestionTimer";
 
 
-export default function QuizItem({question, handleClickOption, answer}: {
+export default function QuizItem({question, handleClickOption, answer, showGoodAnswer}: {
     question: QuizItemProps,
     handleClickOption: (data: ResponseOption) => void,
     answer: ResponseOption,
+    showGoodAnswer?: boolean
 }) {
 
     const [readingAudio, setReadingAudio] = useState<boolean>(false)
@@ -62,8 +63,7 @@ export default function QuizItem({question, handleClickOption, answer}: {
 
 
     return (
-        <div
-            className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-2xl rounded-lg font-[sans-serif] overflow-hidden mt-4">
+        <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-2xl rounded-lg font-[sans-serif] overflow-hidden mt-4">
             <div className="p-6 relative">
                 <h3 className="text-lg font-semibold">{question.title}</h3>
 
@@ -88,6 +88,7 @@ export default function QuizItem({question, handleClickOption, answer}: {
                                     idQuestion={question.id}
                                     multipleChoice={question.multipleChoice}
                                     idOptions={response.idOptions}
+                                    showGoodAnswer={showGoodAnswer}
                             />
                         )}
                     </div>

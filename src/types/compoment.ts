@@ -12,7 +12,7 @@ export type Subject = {
     slug: string,
     subjectName: string,
     description: string,
-    result ?: any[]
+    results ?: any[]
 }
 
 export type QuizItemProps = {
@@ -24,6 +24,7 @@ export type QuizItemProps = {
     multipleChoice: boolean,
     mediaLink?: string,
     category?: Category,
+    answers?: ResponseAnswer[]
 }
 
 export type Category = {
@@ -40,4 +41,15 @@ export type ResponseOption = {
     idOptions: string[],
     option?: OptionProps[],
     question?: QuizItemProps,
+}
+
+export type OptionChoose = {
+    optionId: string,
+    option?:OptionProps
+}
+export type ResponseAnswer = {
+    id?: string,
+    questionId?:string,
+    optionChoose: OptionChoose [],
+    userId?: string
 }

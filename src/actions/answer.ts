@@ -1,11 +1,11 @@
 "use server"
 
-import {OptionProps, ResponseOption} from "@/src/types/compoment";
+import {OptionProps, QuizItemProps, ResponseOption} from "@/src/types/compoment";
 
 export async function calculateScore(answerOption: ResponseOption[], userId: string, subjectId: string | undefined) {
     let point = 0
 
-    let answers:any[] = []
+    let answers: any[] = []
 
     answerOption.map((answer) => {
 
@@ -44,4 +44,34 @@ export async function calculateScore(answerOption: ResponseOption[], userId: str
         result,
         answers
     }
+}
+
+
+export async function ReadResult(questions: QuizItemProps[]) {
+    let answers: ResponseOption[] = []
+
+    questions.map((question) => {
+        if (question.answers) {
+            let ans: ResponseOption = {
+                idOptions: [],
+                option: [],
+                question: question
+            }
+            question.answers.map((answer) => {
+                answer.optionChoose.map((optionChoose) => {
+                    ans.idOptions.push(optionChoose.optionId)
+                    const option: OptionProps = {
+                        id: optionChoose.option?.id ?? '',
+                        isCorrect: optionChoose.option?.isCorrect ?? false,
+                        optionText: optionChoose.option?.optionText ?? "",
+                    }
+                    ans.option?.push(option)
+                })
+            })
+
+            answers.push(ans)
+        }
+    })
+
+    return answers
 }
