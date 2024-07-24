@@ -23,7 +23,7 @@ export default function ResultTestCard({result}: {
                             <span> {result.subjectName} </span>
                         </p>
                         <p className="">
-                            <strong>Nom de l'utilisateur : </strong>
+                            <strong>Nom de l&lsquo;utilisateur : </strong>
                             <span> {result.userName} </span>
                         </p>
                         <p className="">
