@@ -20,7 +20,7 @@ export default function Navbar() {
 
                     <div className="hidden flex-row md:flex md:justify-between py-2 lg:ml-auto mr-5 md:items-center">
                         <div>
-                            <p>Date Aujourd'hui</p>
+                            <p>Date Aujourd&apos;hui</p>
                             <p>{new Date().toLocaleDateString("fr-FR")}</p>
                         </div>
                         <i className="fa fa-calendar-alt m-2 text-3xl"/>
