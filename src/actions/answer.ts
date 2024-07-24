@@ -1,6 +1,7 @@
 "use server"
 
 import {OptionProps, QuizItemProps, ResponseOption} from "@/src/types/compoment";
+import {revalidatePath} from "next/cache";
 
 export async function calculateScore(answerOption: ResponseOption[], userId: string, subjectId: string | undefined) {
     let point = 0
@@ -74,4 +75,22 @@ export async function ReadResult(questions: QuizItemProps[]) {
     })
 
     return answers
+}
+
+export async function ReadResultAdmin(searchPath?: string) {
+    let search = null
+    if (searchPath)
+        search = searchPath
+
+    console.log('Here is the search', search)
+
+    const rs = await fetch(`${process.env.APP_URL}/api/result${search !== null ? '?search=' + search : ''}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        cache: "no-store"
+    })
+
+    return rs.json()
 }

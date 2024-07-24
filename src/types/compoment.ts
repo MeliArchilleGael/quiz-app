@@ -33,7 +33,7 @@ export type Category = {
 }
 
 export type OptionProps = {
-    id: string,
+    id?: string,
     optionText: string,
     isCorrect: boolean,
 }
@@ -53,4 +53,42 @@ export type ResponseAnswer = {
     questionId?:string,
     optionChoose: OptionChoose [],
     userId?: string
+}
+
+export type CreateSubjectFormType = {
+    subjectName: string,
+    description: string,
+    slug: string,
+    passScore: number,
+    maxScore: number,
+    durationInMinutes: number,
+}
+
+export enum QuestionType {
+    multimedia = "multimedia",
+    text = "texte",
+    null = ''
+}
+
+export enum MediaType {
+    image = "image",
+    audio = "audio",
+    null = "",
+}
+
+export type CreateQuestionFormType = {
+    categoryId?: string,
+    subjectId?: string,
+    title: string,
+    questionType: QuestionType,
+    mediaLink: string,
+    mediaType: MediaType,
+    durationInSeconds: number,
+    multipleChoice: boolean,
+    options?: OptionProps[]
+}
+
+export type CreateCategoryFormType = {
+    categoryName : string,
+    pointPerQuestion: number,
 }

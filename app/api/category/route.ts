@@ -1,13 +1,14 @@
+
 import {prisma} from "@/src/lib/prisma";
 import {NextResponse} from "next/server";
-import {CreateSubjectFormType} from "@/src/types/compoment";
+import {CreateCategoryFormType, CreateQuestionFormType, CreateSubjectFormType} from "@/src/types/compoment";
 
 export async function GET(req: Request) {
     try {
-        const subjects = await prisma.subject.findMany()
+        const categories = await prisma.category.findMany()
 
         return NextResponse.json({
-            subjects: subjects
+            categories: categories
         })
 
     } catch (error: any) {
@@ -22,30 +23,22 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    console.log("Here is the req", req)
+
     try {
         const {
-            durationInMinutes,
-            slug,
-            passScore,
-            maxScore,
-            subjectName,
-            description
-        } = (await req.json()) as CreateSubjectFormType;
+            pointPerQuestion,
+            categoryName,
+        } = (await req.json()) as CreateCategoryFormType;
 
-        const subject = await prisma.subject.create({
+        const category = await prisma.category.create({
             data: {
-                subjectName: subjectName,
-                slug: slug,
-                passScore: Number.parseInt(passScore.toString()),
-                durationInMinutes: durationInMinutes,
-                description: description,
-                maxScore: Number.parseInt(maxScore.toString()),
+                pointPerQuestion: Number.parseInt(pointPerQuestion.toString()),
+                categoryName: categoryName,
             }
         })
 
         return NextResponse.json({
-            subject: {...subject},
+            category: {...category},
         });
 
     } catch (error: any) {

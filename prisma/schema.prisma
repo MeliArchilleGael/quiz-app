@@ -90,7 +90,8 @@ model Subject {
   slug              String     @unique @default("")
   description       String
   durationInMinutes Int
-  passScore         Int
+  passScore         Int?       @default(0)
+  maxScore          Int?       @default(0)
   questions         Question[]
   results           Result[]
 

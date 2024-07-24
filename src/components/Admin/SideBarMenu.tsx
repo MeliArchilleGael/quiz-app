@@ -47,6 +47,14 @@ export default function SideBarMenu() {
                         <span>Sujet</span>
                     </Link>
                 </li>
+                <li className="items-center">
+                    <Link
+                        className="text-xs uppercase py-3 font-bold block w-full"
+                        href="/admin/question">
+                        <i className="fa fa-users mr-2 text-sm"/>
+                        <span>Questions</span>
+                    </Link>
+                </li>
             </ul>
 
         </Sidebar>
