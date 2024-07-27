@@ -28,14 +28,14 @@ export function slug(text: string) {
 }
 
 
-export const showToast = (title: string, icon: 'success' | 'error' | 'info' | 'warning' | 'question') => {
+export const showToast = (title: string, icon: 'success' | 'error' | 'info' | 'warning' | 'question', timer=5000) => {
     Swal.fire({
         title: title,
         toast: true,
         position: 'top-end',
         icon: icon,
         showConfirmButton: false,
-        timer: 5000,
+        timer: timer,
         timerProgressBar: true,
         didOpen: (toast) => {
             toast.addEventListener('mouseenter', Swal.stopTimer);

@@ -64,6 +64,7 @@ export default function SubjectDetails({params}: {
                         headers: {
                             "Content-Type": "application/json",
                         },
+                        cache: "no-cache"
                     });
 
                     const sub = await subject.json()

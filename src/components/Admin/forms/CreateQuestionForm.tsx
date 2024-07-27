@@ -22,6 +22,10 @@ export default function CreateQuestionForm({categories, subjects}: {
 
     const [options, setOption] = useState<OptionProps[]>()
 
+    const [selectedFile, setSelectedFile] = useState(null)
+
+    const [errorMessage, setErrorMessage] = useState('')
+
     const {
         register,
         handleSubmit,
@@ -33,8 +37,8 @@ export default function CreateQuestionForm({categories, subjects}: {
         defaultValues: {
             categoryId: "",
             title: "",
-            questionType: QuestionType.null,
-            mediaType: MediaType.null,
+            questionType: QuestionType.text,
+            mediaType: MediaType.image,
             mediaLink: "",
             durationInSeconds: 0,
             multipleChoice: false,
@@ -60,17 +64,56 @@ export default function CreateQuestionForm({categories, subjects}: {
     const router = useRouter()
     const onSubmit = async (data: CreateQuestionFormType) => {
 
+        const formData = new FormData()
+
+        if (isMultimediaQuestion && !selectedFile) {
+            setErrorMessage("Vous n'avez pas selectionner de fichier ")
+            return
+        }
+        if (isMultimediaQuestion && selectedFile) {
+            formData.append('file', selectedFile)
+        }
+
         setLoadingSave(true)
-        data.options = options
 
-        await CreateQuestion(data)
+        const lg = options?.length
 
-        showToast('Question crée', 'success')
+        let question = null
 
-        reset()
-        setOption([])
+        if (lg && lg > 0) {
+            formData.append("options", JSON.stringify(options))
+            formData.append("title", data.title)
+            formData.append("categoryId", data?.categoryId ?? "")
+            formData.append("subjectId", data.subjectId ?? "")
+            formData.append("questionType", data.questionType)
+            formData.append("mediaLink", data.mediaLink)
+            formData.append("mediaType", data.mediaType)
+            formData.append("durationInSeconds", JSON.stringify(data.durationInSeconds))
+            formData.append("multipleChoice", data.multipleChoice.toString())
+
+            question =  await CreateQuestion(formData)
+
+            reset()
+
+            setOption([])
+
+        } else {
+            showToast("Options are required ", "error", 9000)
+        }
+
+        if (question)
+            showToast('Question crée', 'success')
+        else
+            showToast('Erreur try again', 'error')
+
         setLoadingSave(false)
     }
+
+    // @ts-ignore
+    const handleChangeFile = (event) => {
+        setSelectedFile(event.target.files[0])
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-10 border p-8 rounded-md shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)]">
@@ -150,11 +193,21 @@ export default function CreateQuestionForm({categories, subjects}: {
                             <select className="w-full border py-1 px-3 rounded-md" {...register('mediaType')} name=""
                                     id="">
                                 {Object.values(MediaType).map((text, index) =>
-                                    <option key={index} value="">{text}</option>
+                                    <option key={index} value={text}>{text}</option>
                                 )}
                             </select>
 
                             {errors.mediaType &&
+                                <InputError message="Error" className=""/>
+                            }
+                        </div>
+
+                        <div className="flex flex-col gap-2 w-full">
+                            <InputLabel value="Fichier de la question "/>
+                            <input type="file" className="w-full border py-1 px-3 rounded-md"
+                                   onChange={handleChangeFile}
+                            />
+                            {errorMessage &&
                                 <InputError message="Error" className=""/>
                             }
                         </div>

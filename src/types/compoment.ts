@@ -85,7 +85,8 @@ export type CreateQuestionFormType = {
     mediaType: MediaType,
     durationInSeconds: number,
     multipleChoice: boolean,
-    options?: OptionProps[]
+    options?: OptionProps[],
+    file?:any
 }
 
 export type CreateCategoryFormType = {

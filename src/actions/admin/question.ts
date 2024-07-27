@@ -3,22 +3,19 @@
 
 import {CreateQuestionFormType, CreateSubjectFormType} from "@/src/types/compoment";
 
-export async function CreateQuestion(data: CreateQuestionFormType) {
+export async function CreateQuestion(data: FormData) {
 
     try {
         const question = await fetch(process.env.APP_URL + "/api/question", {
             method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },ù
+            body: data,
         });
 
         return await question.json()
 
     }catch (error: any) {
         console.log("Error while fetching the question ", error)
-        return {}
+        return null
     }
 
 }
