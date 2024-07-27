@@ -1,13 +1,6 @@
 import {prisma} from "@/src/lib/prisma";
 import {NextResponse} from "next/server";
-import multer from 'multer';
-import path from "path";
 import fs from "fs"
-import {promisify} from "util";
-import {pipeline} from 'stream'
-
-const pump = promisify(pipeline);
-
 export async function GET(req: Request) {
     try {
         const questions = await prisma.question.findMany({
