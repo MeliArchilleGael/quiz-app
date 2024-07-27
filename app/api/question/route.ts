@@ -72,8 +72,6 @@ export async function POST(req: Request) {
 
         })
 
-        console.log("Here is the question save  ", question)
-
         return NextResponse.json({
             question: {...question},
         });

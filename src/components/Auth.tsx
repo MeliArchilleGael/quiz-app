@@ -12,6 +12,8 @@ export default function Auth({children}: {
     const router = useRouter()
     const pathname = usePathname();
 
+   // const user = auth()
+
     //console.log('Session on the auth component ', session)
 
     useEffect(() => {

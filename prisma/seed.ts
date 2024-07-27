@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from '@prisma/client'
 import {now} from "next-auth/client/_utils";
+import {hash} from "bcryptjs";
 const prisma = new PrismaClient()
 async function main() {
 
@@ -418,7 +419,7 @@ async function main() {
         data: {
             email: "user@gmail.com",
             name: "User",
-            password: "password",
+            password: await hash("password", 12),
             access: {
                 create: [
                     {
@@ -433,7 +434,7 @@ async function main() {
         data: {
             email: "admin@gmail.com",
             name: "Admin",
-            password: "password",
+            password: await hash("password", 12),
             access: {
                 create: [
                     {
