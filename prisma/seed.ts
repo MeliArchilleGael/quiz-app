@@ -1,4 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client'
+import {now} from "next-auth/client/_utils";
 const prisma = new PrismaClient()
 async function main() {
 
@@ -413,8 +414,38 @@ async function main() {
         }
     })
 
+    const user = await prisma.user.create({
+        data: {
+            email: "user@gmail.com",
+            name: "User",
+            password: "password",
+            access: {
+                create: [
+                    {
+                        startDate: new Date(),
+                        endDate: new Date("2025-05-05T00:00"),
+                    }
+                ]
+            }
+        }
+    })
+    const Admin = await prisma.user.create({
+        data: {
+            email: "admin@gmail.com",
+            name: "Admin",
+            password: "password",
+            access: {
+                create: [
+                    {
+                        startDate: new Date("2024-07-12T00:00"),
+                        endDate: new Date("2025-05-05T00:00"),
+                    }
+                ]
+            }
+        }
+    })
 
-    console.log({ subject1, subject2, subject3 })
+    console.log({ subject1, subject2, subject3, user, Admin })
 }
 main()
     .then(async () => {
