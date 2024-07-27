@@ -10,7 +10,15 @@ const pump = promisify(pipeline);
 
 export async function GET(req: Request) {
     try {
-        const questions = await prisma.question.findMany()
+        const questions = await prisma.question.findMany({
+            include: {
+                category: {
+                    select: {
+                        categoryName: true,
+                    }
+                }
+            }
+        })
 
         return NextResponse.json({
             questions: questions
@@ -40,7 +48,7 @@ export async function POST(req: Request) {
             if (!fs.existsSync(uploadDir)) {
                 fs.mkdirSync(uploadDir, {recursive: true});
             }
-            fs.writeFileSync(uploadDir+`/${file.name}`, buffer)
+            fs.writeFileSync(uploadDir + `/${file.name}`, buffer)
         }
 
         const options = JSON.parse((formData.get('options'))?.toString() ?? "[]")
@@ -71,7 +79,7 @@ export async function POST(req: Request) {
 
         })
 
-        console.log("Here is the question save  ", question )
+        console.log("Here is the question save  ", question)
 
         return NextResponse.json({
             question: {...question},

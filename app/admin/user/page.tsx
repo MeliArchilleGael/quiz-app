@@ -1,21 +1,21 @@
 import Link from "next/link";
 import EditSVG from "@/src/components/ui/EditSVG";
 import DeleteSVG from "@/src/components/ui/DeleteSVG";
-import {ReadSubject} from "@/src/actions/admin/subject";
 import {CreateSubjectFormType} from "@/src/types/compoment";
+import {ReadUsers} from "@/src/actions/admin/users";
 
 
 export default async function SubjectPage() {
 
-    const sub = await ReadSubject()
-    const subjects = sub.subjects
+    const us = await ReadUsers()
+    const users = us.users
 
     return (
         <>
-            <p className="text-center text-lg font-bold">Liste des sujets</p>
+            <p className="text-center text-lg font-bold">Liste des utilisateurs </p>
 
             <div className="flex justify-end px-5">
-                <Link href="/admin/subject/create"
+                <Link href="/admin/users/create"
                       className="shadow-md text-sm rounded-md py-2 px-3 bg-green-600 text-white ">
                     Nouveau
                 </Link>
@@ -29,16 +29,13 @@ export default async function SubjectPage() {
                             Nom
                         </th>
                         <th className="p-4 text-left text-xs font-semibold text-gray-800">
-                            Description
+                            Email
                         </th>
                         <th className="p-4 text-left text-xs font-semibold text-gray-800">
-                            Durée
+                            Date de début
                         </th>
                         <th className="p-4 text-left text-xs font-semibold text-gray-800">
-                            Pass Score
-                        </th>
-                        <th className="p-4 text-left text-xs font-semibold text-gray-800">
-                            Max Score
+                            Date de fin
                         </th>
                         <th className="p-4 text-left text-xs font-semibold text-gray-800">
                             Actions
@@ -47,13 +44,12 @@ export default async function SubjectPage() {
                     </thead>
 
                     <tbody className="whitespace-nowrap">
-                    {subjects.map((subject : CreateSubjectFormType) =>
-                        <tr key={subject.id} className="hover:bg-gray-50">
-                            <td className="p-4 text-[15px] text-gray-800">{subject.subjectName}</td>
-                            <td className="p-4 text-[15px] text-gray-800">{subject.description}</td>
-                            <td className="p-4 text-[15px] text-gray-800">{subject.durationInMinutes}</td>
-                            <td className="p-4 text-[15px] text-gray-800">{subject.passScore}</td>
-                            <td className="p-4 text-[15px] text-gray-800">{subject.maxScore}</td>
+                    {users.map((user : any) =>
+                        <tr key={user.id} className="hover:bg-gray-50">
+                            <td className="p-4 text-[15px] text-gray-800">{user.name}</td>
+                            <td className="p-4 text-[15px] text-gray-800">{user.email}</td>
+                            <td className="p-4 text-[15px] text-gray-800">{new Date(user.access[0]?.startDate).toLocaleString()}</td>
+                            <td className="p-4 text-[15px] text-gray-800">{new Date(user.access[0]?.endDate).toLocaleString()}</td>
 
                             <td className="p-4">
                                 <button className="mr-4" title="Edit">

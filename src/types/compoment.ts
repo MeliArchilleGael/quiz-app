@@ -56,6 +56,7 @@ export type ResponseAnswer = {
 }
 
 export type CreateSubjectFormType = {
+    id?: string,
     subjectName: string,
     description: string,
     slug: string,
@@ -77,7 +78,9 @@ export enum MediaType {
 }
 
 export type CreateQuestionFormType = {
+    id?:string,
     categoryId?: string,
+    category?: any,
     subjectId?: string,
     title: string,
     questionType: QuestionType,

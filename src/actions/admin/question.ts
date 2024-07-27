@@ -24,7 +24,8 @@ export async function ReadQuestion() {
     const subjects = await fetch(process.env.APP_URL+'/api/question', {
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+        cache: "no-cache"
     })
 
     return subjects.json()
