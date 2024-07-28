@@ -11,8 +11,15 @@ RUN cd quiz-app
 
 WORKDIR /var/www/quiz-app
 
-RUN npm install && npx prisma migrate dev && npm run build
+RUN npm install
+
+RUN npx prisma migrate reset --force
+
+RUN chmod 777 ./public/*
+
+# RUN npx prisma migrate dev
+# RUN npm run build
 
 EXPOSE 3000
 
-ENTRYPOINT ["npm","run","start"]
+ENTRYPOINT ["npm","run","dev"]
