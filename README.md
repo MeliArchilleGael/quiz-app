@@ -36,7 +36,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 **Give all the permission to the directory "public" of the project**
 ```bash 
-    chmod 777 ./public/*
+    chmod -R 777 ./public
 ```
 ** Start the project **
 ```bash 
