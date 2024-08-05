@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM node:21.7.3
 
 LABEL authors="DevMAG"
