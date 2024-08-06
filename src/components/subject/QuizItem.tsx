@@ -12,7 +12,7 @@ export default function QuizItem({question,
                                      showingRecap = false,
                                      questionTimeEnded
                                  }: {
-    question: QuizItemProps,
+    question: QuizItemProps | undefined,
     handleClickOption: (data: ResponseOption) => void,
     answer: ResponseOption,
     showGoodAnswer?: boolean,
@@ -28,6 +28,9 @@ export default function QuizItem({question,
 
 
     useEffect(() => {
+        if (!question)
+            return
+
         setReadingAudio(question.questionType === 'multimedia' && question.mediaType === "audio")
 
         const update = async () => {
@@ -47,10 +50,10 @@ export default function QuizItem({question,
 
     const handleLocalClickOption = async (option: OptionProps) => {
         let newOption
-        const value = option.id
+        const value = option.id as string
         let res = response
 
-        if (question.multipleChoice) {
+        if (question && question.multipleChoice) {
             if (response.idOptions.includes(value)) {
                 newOption = response.idOptions.filter((item) => item !== value)
             } else {
@@ -70,7 +73,7 @@ export default function QuizItem({question,
 
     const timeAllowToAnswerEnd = () => {
 
-        if (question.questionType === "multimedia" && question.mediaType === "audio" || questionTimeEnded) {
+        if (question && question.questionType === "multimedia" && question.mediaType === "audio" || questionTimeEnded) {
             //console.log("Time end on the quiz compoment ")
             questionTimeEnded()
         }
@@ -82,7 +85,7 @@ export default function QuizItem({question,
                 className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-[40rem]  rounded-lg font-[sans-serif] overflow-hidden mt-4">
                 <div className="p-6 relative">
 
-                    {question.questionType === "multimedia" && question.mediaType === "audio" &&
+                    {question && question.questionType === "multimedia" && question.mediaType === "audio" &&
                         <div>
                             <h3 className="text-lg font-semibold"> Ecoutez ....</h3>
                             <div className="flex justify-center items-center">
@@ -100,13 +103,13 @@ export default function QuizItem({question,
                         </div>
                     }
 
-                    {(!readingAudio || showGoodAnswer || showingRecap) &&
+                    {question && (!readingAudio || showGoodAnswer || showingRecap) &&
                         <div>
                             <h3 className="text-lg font-semibold mt-4">{question.title}</h3>
                             <div className="flex flex-col items-center gap-5 h-full mt-5">
                                 {question.questionType === "multimedia" && question.mediaType === 'image' &&
                                     <div className="">
-                                        <Image width={500} height={500} src={question.mediaLink}
+                                        <Image width={500} height={500} src={question.mediaLink as string}
                                                alt="image de la question "/>
                                     </div>
                                 }

@@ -107,6 +107,9 @@ model Answer {
   questionId String?
   question   Question? @relation(fields: [questionId], references: [id])
 
+  resultId String?
+  result   Result? @relation(fields: [resultId], references: [id])
+
   createdAt    DateTime       @default(now()) @map("created_at")
   updatedAt    DateTime       @updatedAt @map("updated_at")
   optionChoose OptionChoose[]
@@ -132,7 +135,10 @@ model Result {
   subjectId String?
   subject   Subject? @relation(fields: [subjectId], references: [id])
 
-  userScore Int @default(0)
+  userScore  Int     @default(0)
+  lastResult Boolean @default(true)
+
+  answers    Answer[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

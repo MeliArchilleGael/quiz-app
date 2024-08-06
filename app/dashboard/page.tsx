@@ -1,10 +1,11 @@
 "use client"
 import Link from "next/link";
-import {useSession} from "next-auth/react";
+import {signOut} from "next-auth/react";
 import Auth from "@/src/components/Auth";
 import {useEffect, useState} from "react";
 import AccessTimer from "@/src/components/AccessTimer";
 import Spinner from "@/src/components/ui/Spinner";
+import {useRouter} from "next/navigation";
 
 type Subject = {
     subjectName: string,
@@ -18,7 +19,11 @@ export default function SubjectDashboard() {
 
     const [subjects, setSubjects] = useState([])
 
+    const [loadingLogOut, setLoadingLogOut] = useState(false)
+
     const [loadingReadData, setLoadingReadData] = useState(false)
+
+    const router = useRouter()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,6 +53,13 @@ export default function SubjectDashboard() {
         };
     }, []);
 
+
+    const logOut = async () => {
+        setLoadingLogOut(true)
+        await signOut().then(() => router.push('/'))
+
+        setLoadingLogOut(false)
+    }
     return (
         <Auth>
             {loadingReadData ?
@@ -61,7 +73,15 @@ export default function SubjectDashboard() {
                             className="min-h-[150px] md:min-h-[200px] relative z-50 h-full mx-auto flex flex-col justify-center items-center text-center text-white">
                             <h2 className="sm:text-4xl text-2xl font-bold mb-6">WEB QUIZZ APP </h2>
 
-                            <AccessTimer/>
+                            <div className="flex gap-5 items-center flex-col md:flex-row">
+                                <AccessTimer/>
+
+                                <button onClick={logOut} disabled={loadingLogOut}
+                                        className={`border-2 bg-red text-white px-8 py-2 rounded-md ${loadingLogOut ? 'cursor-not-allowed' : ''}`}>
+                                    {loadingLogOut && <Spinner/>}
+                                    <span>Se Deconnecter </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div className="my-8 px-4 md:px-8">

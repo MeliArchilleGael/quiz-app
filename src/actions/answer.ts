@@ -3,7 +3,7 @@
 import {OptionProps, QuizItemProps, ResponseOption} from "@/src/types/compoment";
 import {revalidatePath} from "next/cache";
 
-export async function calculateScore(answerOption: ResponseOption[], userId: string, subjectId: string | undefined) {
+export async function calculateScore(answerOption: ResponseOption[], userId: string|undefined, subjectId: string | undefined) {
     let point = 0
 
     let answers: any[] = []
@@ -11,7 +11,7 @@ export async function calculateScore(answerOption: ResponseOption[], userId: str
     answerOption.map((answer) => {
 
         //construct the AnswerTableStructure
-        let ans: { userId: string, questionId: string | undefined, option: OptionProps[] } = {
+        let ans: { userId: string|undefined, questionId: string | undefined, option: OptionProps[] } = {
             userId: userId,
             questionId: answer?.question?.id,
             option: [],
@@ -82,7 +82,7 @@ export async function ReadResultAdmin(searchPath?: string) {
     if (searchPath)
         search = searchPath
 
-    console.log('Here is the search', search)
+    //console.log('Here is the search', search)
 
     const rs = await fetch(`${process.env.APP_URL}/api/result${search !== null ? '?search=' + search : ''}`, {
         method: "GET",

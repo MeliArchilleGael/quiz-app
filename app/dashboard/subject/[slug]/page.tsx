@@ -8,6 +8,7 @@ import QuestionTimer from "@/src/components/QuestionTimer";
 import {calculateScore, ReadResult} from "@/src/actions/answer";
 import {useSession} from "next-auth/react";
 import Spinner from "@/src/components/ui/Spinner";
+import Link from "next/link";
 
 export default function SubjectDetails({params}: {
     params: { slug: string }
@@ -27,9 +28,11 @@ export default function SubjectDetails({params}: {
 
     const [showRecap, setShowRecap] = useState<boolean>(false)
 
-    const [showScore, setShowScore] = useState(false)
+    const [showScore, setShowScore] = useState<boolean>(false)
 
-    const [timeEnd, setTimeEnd] = useState(false)
+    const [timeEnd, setTimeEnd] = useState<boolean>(false)
+
+    const [score, setScore] = useState<number>(0)
 
     const {data: session, status} = useSession();
 
@@ -99,6 +102,7 @@ export default function SubjectDetails({params}: {
                     const result = await ReadResult(questions)
 
                     setAnswerOption(result)
+                    setScore(results[0].userScore)
 
                     setShowScore(true)
 
@@ -148,10 +152,11 @@ export default function SubjectDetails({params}: {
 
         const result = await saveAnswer(data.answers, data.result)
 
+        setScore(data.result.userScore)
         setShowScore(true)
 
         setLoadingSaveAnswers(false)
-        console.log("Here is the result ", result)
+        //console.log("Here is the result ", result)
         return
     }
 
@@ -218,6 +223,10 @@ export default function SubjectDetails({params}: {
         //console.log("Question time end & next call ")
     }
 
+    const repassSubject = () => {
+
+    }
+
     return (
         <Auth>
             <div className="min-h-screen my-5 flex min-w-full items-center justify-center">
@@ -228,7 +237,7 @@ export default function SubjectDetails({params}: {
                         questions.length > 0 ?
                             <div>
                                 <QuestionTimer timeEnd={TimeEndSubject} label="Fin du suject dans "
-                                               timer={subjectDurationInMilliseconds}/>
+                                               timer={subjectDurationInMilliseconds as number}/>
                                 <div className="flex items-center flex-wrap w-full mx-auto">
                                     <Stepper steps={steps} goTo={goTo}/>
                                 </div>
@@ -286,17 +295,33 @@ export default function SubjectDetails({params}: {
 
                         :
                         <div className="flex justify-center flex-col items-center gap-8">
+                            <div className="">
+                                Score dernier Test : {score}
+                            </div>
+                            <div className="flex gap-5">
+                                <Link href="/dashboard"
+                                        className={`border-2 bg-green-600 text-white px-8 py-2 rounded-md cursor-pointer ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                    Retour
+                                </Link>
+
+                                <button disabled={loadingSaveAnswers} onClick={repassSubject}
+                                        className={`border-2 bg-cyan-500 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                    {loadingSaveAnswers && <Spinner/>}
+                                    Repassé l&rsquo;examen
+                                </button>
+
+                            </div>
                             {answerOption.map((answer: ResponseOption, index: number) =>
-                                    <QuizItem key={index} handleClickOption={
-                                        (data) => {
-                                            updateAnswer(data)
-                                        }}
-                                              question={answer.question}
-                                              answer={answer}
-                                              showGoodAnswer={showScore}
-                                              questionTimeEnded={TimeQuestionEnd}
-                                    />
-                                )
+                                <QuizItem key={index} handleClickOption={
+                                    (data) => {
+                                        updateAnswer(data)
+                                    }}
+                                          question={answer.question}
+                                          answer={answer}
+                                          showGoodAnswer={showScore}
+                                          questionTimeEnded={TimeQuestionEnd}
+                                />
+                            )
                             }
                         </div>
                     /*<div className="bg-white border-2 rounded-xl shadow-2xl p-8">
