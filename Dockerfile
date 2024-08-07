@@ -1,27 +1,39 @@
+# syntax=docker/dockerfile:1
+
 FROM node:21.7.3
 
 LABEL authors="DevMAG"
 
-RUN apt update && apt install git -y && apt install sqlite3 -y
+# Install necessary packages in a single RUN command
+RUN apt update && apt install -y git sqlite3
 
+# Set the working directory
 WORKDIR /var/www
 
+# Clone the repository
 RUN git clone https://github.com/MeliArchilleGael/quiz-app.git
 
-RUN cd quiz-app
-
+# Set the working directory to the cloned app directory
 WORKDIR /var/www/quiz-app
 
+# Install dependencies
 RUN npm install
 
 # RUN npx prisma migrate dev
+
+# Perform database migration
 RUN npx prisma migrate reset --force
 
-RUN chmod 777 ./public/*
+# Make public files executable (if needed)
+RUN chmod -R 777 ./public
 
-RUN npm run build
+# Build the application
+# RUN npm run build
 
+# Expose the port the app runs on
 EXPOSE 3000
 
-#ENTRYPOINT ["npm","run","dev"]
-ENTRYPOINT ["npm","run","start"]
+ENTRYPOINT ["npm","run","dev"]
+
+# Start the application
+# ENTRYPOINT ["npm", "run", "start"]
