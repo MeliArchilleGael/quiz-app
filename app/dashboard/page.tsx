@@ -6,6 +6,8 @@ import {useEffect, useState} from "react";
 import AccessTimer from "@/src/components/AccessTimer";
 import Spinner from "@/src/components/ui/Spinner";
 import {useRouter} from "next/navigation";
+import {deleteSession} from "@/src/actions/session";
+import {signOutDeleteSession} from "@/src/lib/auth";
 
 type Subject = {
     subjectName: string,
@@ -53,13 +55,12 @@ export default function SubjectDashboard() {
         };
     }, []);
 
-
     const logOut = async () => {
         setLoadingLogOut(true)
-        await signOut().then(() => router.push('/'))
-
+        await signOutDeleteSession()
         setLoadingLogOut(false)
     }
+
     return (
         <Auth>
             {loadingReadData ?

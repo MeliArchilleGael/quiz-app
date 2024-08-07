@@ -15,3 +15,17 @@ export const getSession = async () => {
 
     return await response.json()
 }
+
+
+export const deleteSession = async () => {
+    const response = await fetch('/api/session', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    console.log(response)
+
+    return await response.json()
+}

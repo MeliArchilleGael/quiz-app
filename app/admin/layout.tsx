@@ -1,11 +1,26 @@
 "use client"
 
-import {ReactNode} from "react";
+import {ReactNode, useEffect} from "react";
 import SideBarMenu from "@/src/components/Admin/SideBarMenu";
 import Navbar from "@/src/components/Admin/NavBar";
 import AuthFooter from "@/src/components/Admin/AdminFooter";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
+import {signOutDeleteSession} from "@/src/lib/auth";
 
-export default function Layout({children} : {children: ReactNode}) {
+export default function Layout({children}: { children: ReactNode }) {
+
+    const {data: session, status} = useSession();
+
+    const router = useRouter()
+
+    useEffect(() => {
+        const userEmail = session?.user.email
+
+        if ((!session && status !== "loading") || !userEmail || userEmail !== 'admin@gmail.com') {
+            signOutDeleteSession()
+        }
+    }, [status, session]);
 
 
     return (

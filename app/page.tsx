@@ -1,7 +1,7 @@
-"use client"
+
 import LoginForm from "@/src/components/LoginForm";
 
-export default function Home() {
+export default async function Home() {
 
     return (
         <div className="flex justify-center items-center h-[100vh]">

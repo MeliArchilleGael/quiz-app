@@ -53,3 +53,11 @@ export async function POST(request: NextRequest) {
         return updatedResponse;
     }
 }
+
+export async function DELETE(request: NextRequest) {
+
+    const response  = NextResponse.json({})
+    response.cookies.delete('session')
+
+    return response
+}

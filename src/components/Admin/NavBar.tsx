@@ -1,8 +1,16 @@
 import React from "react";
 import Link from "next/link";
 import Dropdown from "@/src/components/Admin/Dropdown";
+import {deleteSession} from "@/src/actions/session";
+import {signOut} from "next-auth/react";
 
 export default function Navbar() {
+
+    const logOut = async () => {
+        await deleteSession()
+        await signOut({callbackUrl: '/'})
+    }
+
 
     return (
         <>
@@ -49,9 +57,7 @@ export default function Navbar() {
 
                             <Dropdown.Content>
                                 <Dropdown.Link href="">Profile</Dropdown.Link>
-                                <Dropdown.Button onClick={() => {
-                                    console.log("Log out clicked")
-                                }}>
+                                <Dropdown.Button onClick={logOut}>
                                     Log Out
                                 </Dropdown.Button>
                             </Dropdown.Content>

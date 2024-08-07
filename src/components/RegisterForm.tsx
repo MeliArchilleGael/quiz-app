@@ -1,13 +1,11 @@
 "use client"
 
 import Spinner from "@/src/components/ui/Spinner";
-import React, {ChangeEvent, useState} from "react";
-import {signIn} from "next-auth/react";
+import React, {useState} from "react";
 import {useForm} from "react-hook-form";
-import {CreateCategoryFormType, CreateUserType} from "@/src/types/compoment";
+import {CreateUserType} from "@/src/types/compoment";
 import InputError from "@/src/components/ui/InputError";
 import {showToast} from "@/src/lib/util";
-import {useRouter} from "next/navigation";
 
 export default function RegisterForm() {
 
@@ -15,15 +13,11 @@ export default function RegisterForm() {
 
     const [loading, setLoading] = useState(false);
 
-    const router = useRouter()
-
     const onSubmit = async (data: CreateUserType) => {
 
         setError("")
         try {
             setLoading(true);
-
-            console.log(data)
 
             const res = await fetch("/api/user/register", {
                 method: "POST",
@@ -35,7 +29,6 @@ export default function RegisterForm() {
 
             setLoading(false);
 
-            console.log(res);
             setLoading(false);
             if (!res.ok) {
                 setError((await res.json()).message);
