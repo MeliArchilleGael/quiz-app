@@ -73,7 +73,7 @@ export default function LoginForm() {
 
             setLoading(false);
 
-            console.log(res);
+            //console.log(res);
 
             if (!res?.error) {
                 await redirectUser()
@@ -121,7 +121,7 @@ export default function LoginForm() {
             <button type="submit" disabled={loading}
                     className="mt-8 w-full flex justify-center gap-3 px-4 py-2.5 mx-auto text-center text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
                 {loading && <Spinner/>}
-                {loading ? 'Submitting...' : 'Sign up'}
+                {loading ? 'Submitting...' : 'Se connecter'}
             </button>
         </form>
     )
