@@ -15,7 +15,7 @@ export default async function SubjectPage() {
             <p className="text-center text-lg font-bold">Liste des utilisateurs </p>
 
             <div className="flex justify-end px-5">
-                <Link href="/admin/users/create"
+                <Link href="/admin/user/create"
                       className="shadow-md text-sm rounded-md py-2 px-3 bg-green-600 text-white ">
                     Nouveau
                 </Link>

@@ -3,29 +3,31 @@
 import Spinner from "@/src/components/ui/Spinner";
 import React, {ChangeEvent, useState} from "react";
 import {signIn} from "next-auth/react";
+import {useForm} from "react-hook-form";
+import {CreateCategoryFormType, CreateUserType} from "@/src/types/compoment";
+import InputError from "@/src/components/ui/InputError";
+import {showToast} from "@/src/lib/util";
+import {useRouter} from "next/navigation";
 
 export default function RegisterForm() {
 
     const [error, setError] = useState("");
 
     const [loading, setLoading] = useState(false);
-    const [formValues, setFormValues] = useState({
-        email: "",
-        password: "",
-        name: "",
-    });
 
-    const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const router = useRouter()
+
+    const onSubmit = async (data: CreateUserType) => {
+
+        setError("")
         try {
             setLoading(true);
-            setFormValues({email: "", password: "", name: ""});
 
-            console.log(formValues)
+            console.log(data)
 
             const res = await fetch("/api/user/register", {
                 method: "POST",
-                body: JSON.stringify(formValues),
+                body: JSON.stringify(data),
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -39,47 +41,87 @@ export default function RegisterForm() {
                 setError((await res.json()).message);
                 return;
             }
+
+            showToast('Utilisateur crée', 'success')
+
+            reset()
+
+            //router.push('/admin/user')
         } catch (error: any) {
             setLoading(false);
             setError(error.statusText);
         }
     };
 
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target;
-        setFormValues({...formValues, [name]: value});
-    };
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+        reset,
+    } = useForm<CreateUserType>({
+        defaultValues: {
+            name: "",
+            startDate: new Date(),
+            endDate: new Date(),
+            email: "",
+            password: ""
+        }
+    })
     return (
-        <form onSubmit={onSubmit} className="space-y-4 font-[sans-serif] max-w-lg mx-auto">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 font-[sans-serif]  mx-auto">
             {error && (
                 <p className="text-center bg-red-300 py-4 mb-6 rounded">{error}</p>
             )}
 
             <div>
+                <label className="text-sm" htmlFor="name">Nom de l&lsquo;utilisateur </label>
                 <input type="text" placeholder="Enter Name"
-                       name="name"
-                       value={formValues.name}
-                       onChange={handleChange}
-                       className="px-4 py-3 bg-gray-100 w-full text-sm outline-none border-b-2 border-blue-500 rounded"/>
-                {/*{state?.errors?.email && <p className="mt-2 text-red-400">{state.errors.email}</p>}*/}
+                       {...register('name', {required: true})}
+                       className="px-4 py-3 bg-gray-100 w-full mt-2 text-sm outline-none border-b-2 border-blue-500 rounded"/>
+                {errors.name &&
+                    <InputError message="Ce champs est requis" className=""/>
+                }
             </div>
 
 
             <div>
+                <label className="text-sm" htmlFor="email">Email</label>
                 <input type="email" placeholder="Enter Email"
-                       name="email"
-                       value={formValues.email}
-                       onChange={handleChange}
-                       className="px-4 py-3 bg-gray-100 w-full text-sm outline-none border-b-2 border-blue-500 rounded"/>
-                {/*{state?.errors?.email && <p className="mt-2 text-red-400">{state.errors.email}</p>}*/}
+                       {...register('email', {required: true})}
+                       className="px-4 py-3 mt-2 bg-gray-100 w-full text-sm outline-none border-b-2 border-blue-500 rounded"/>
+                {errors.email &&
+                    <InputError message="Ce champs est requis" className=""/>
+                }
             </div>
 
             <div>
-                <input type="password" placeholder="Enter Password" value={formValues.password}
-                       name="password"
-                       onChange={handleChange}
-                       className="px-4 py-3 bg-gray-100 w-full text-sm outline-none border-b-2 border-transparent focus:border-blue-500 rounded"/>
+                <label className="text-sm" htmlFor="">Mot de passe </label>
+                <input type="text" placeholder="Enter Password"
+                       {...register('password', {required: true})}
+                       className="px-4 py-3 mt-2 bg-gray-100 w-full text-sm outline-none border-b-2 border-transparent focus:border-blue-500 rounded"/>
+                {errors.password &&
+                    <InputError message="Ce champs est requis" className=""/>
+                }
+            </div>
+
+            <div>
+                <label className="text-sm" htmlFor="email">Date de début </label>
+                <input type="datetime-local"
+                       {...register('startDate', {required: true})}
+                       className="px-4 py-3 mt-2 bg-gray-100 w-full text-sm outline-none border-b-2 border-blue-500 rounded"/>
+                {errors.startDate &&
+                    <InputError message="Ce champs est requis" className=""/>
+                }
+            </div>
+
+            <div>
+                <label className="text-sm" htmlFor="email">Date de fin </label>
+                <input type="datetime-local"
+                       {...register('endDate', {required: true})}
+                       className="px-4 py-3 mt-2 bg-gray-100 w-full text-sm outline-none border-b-2 border-blue-500 rounded"/>
+                {errors.endDate &&
+                    <InputError message="Ce champs est requis" className=""/>
+                }
             </div>
 
             <button type="submit" disabled={loading}

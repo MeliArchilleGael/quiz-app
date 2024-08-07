@@ -1,3 +1,5 @@
+import {DateTime} from "next-auth/providers/kakao";
+
 export type StepperProps = {
     num?: number,
     active?: boolean,
@@ -95,4 +97,13 @@ export type CreateQuestionFormType = {
 export type CreateCategoryFormType = {
     categoryName : string,
     pointPerQuestion: number,
+}
+
+
+export type CreateUserType = {
+    name: string,
+    email: string,
+    password: string,
+    startDate: Date,
+    endDate: Date,
 }

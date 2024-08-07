@@ -24,7 +24,7 @@ export default function CreateCategoryForm() {
     } = useForm<CreateCategoryFormType>({
         defaultValues: {
             categoryName: "",
-            pointPerQuestion: 0
+            pointPerQuestion: 1
         }
     })
 
@@ -43,10 +43,10 @@ export default function CreateCategoryForm() {
         reset()
         setLoadingSave(false)
 
-        router.push('/admin/question/create')
+        router.push('/admin/question/create?reload='+new Date().getTime())
     }
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10 border p-8 rounded-md shadow-2xl">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10 border p-8 rounded-md shadow-md">
 
             <div className="flex flex-wrap gap-5">
                 <div className="flex flex-col gap-2 w-full">
@@ -62,7 +62,7 @@ export default function CreateCategoryForm() {
                 <div className="flex flex-col gap-2 w-full">
                     <InputLabel value="Point par question de cette categorie"/>
                     <input type="number" className="w-full border py-1 px-3 rounded-md"
-                           {...register('pointPerQuestion', {required: true})}
+                           {...register('pointPerQuestion', {required: true, min: 1})}
                     />
                     {errors.pointPerQuestion &&
                         <InputError message="Ce champs est requis" className=""/>

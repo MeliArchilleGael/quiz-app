@@ -2,13 +2,11 @@
 import { prisma } from "@/src/lib/prisma";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
+import {CreateUserType} from "@/src/types/compoment";
 export async function POST (req: Request) {
     try {
-        const { name, email, password } = (await req.json()) as {
-            name: string;
-            email: string;
-            password: string;
-        };
+        const { name, email, password, startDate, endDate } = (await req.json()) as CreateUserType
+
         const hashed_password = await hash(password, 12);
 
         const user = await prisma.user.create({
@@ -16,6 +14,12 @@ export async function POST (req: Request) {
                 name,
                 email: email,
                 password: hashed_password,
+                access: {
+                    create: {
+                        startDate: startDate+':00+00:00',
+                        endDate: endDate+':00+00:00'
+                    }
+                }
             },
         });
 
@@ -34,9 +38,4 @@ export async function POST (req: Request) {
             { status: 500 }
         );
     }
-}
-
-
-export const PATCH = () => {
-
 }

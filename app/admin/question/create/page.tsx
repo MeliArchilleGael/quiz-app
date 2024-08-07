@@ -13,14 +13,18 @@ export  default async function CreateQuestion() {
 
     return (
         <>
-            <p className="text-center text-lg font-bold">Créer une nouvelle question</p>
+
             <div className="flex gap-5 flex-col">
+
+                <p className="text-center text-lg font-bold">Créer une nouvelle Categorie</p>
+                <CreateCategoryForm/>
+
+                <p className="text-center text-lg font-bold">Créer une nouvelle question</p>
                 <CreateQuestionForm
                     subjects={subjects.subjects}
                     categories={categories.categories}
                 />
 
-                <CreateCategoryForm/>
             </div>
         </>
     )
