@@ -37,6 +37,9 @@ export default function SubjectDetails({params}: {
     const {data: session, status} = useSession();
 
     const [loadingSaveAnswers, setLoadingSaveAnswers] = useState(false)
+
+    const [startSubject, setStartSubject] = useState(false)
+
     const [loadingReadData, setLoadingReadData] = useState(false)
 
     useEffect(() => {
@@ -233,100 +236,126 @@ export default function SubjectDetails({params}: {
                 {loadingReadData ?
                     <Spinner className="h-7 w-7 text-green-500"/>
                     :
-                    !showScore ?
-                        questions.length > 0 ?
-                            <div>
-                                <QuestionTimer timeEnd={TimeEndSubject} label="Fin du suject dans "
-                                               timer={subjectDurationInMilliseconds as number}/>
-                                <div className="flex items-center flex-wrap w-full mx-auto">
-                                    <Stepper steps={steps} goTo={goTo}/>
+                    startSubject ?
+                        !showScore ?
+                            questions.length > 0 ?
+                                <div>
+                                    <QuestionTimer timeEnd={TimeEndSubject} label="Fin du suject dans "
+                                                   timer={subjectDurationInMilliseconds as number}/>
+                                    <div className="flex items-center flex-wrap w-full mx-auto">
+                                        <Stepper steps={steps} goTo={goTo}/>
+                                    </div>
+
+                                    <div className="mt-8">
+                                        <div className="flex justify-center flex-col items-center gap-8">
+
+                                            {showRecap ?
+                                                answerOption.map((answer: ResponseOption, index: number) =>
+                                                    <QuizItem key={index} handleClickOption={
+                                                        (data) => {
+                                                            updateAnswer(data)
+                                                        }}
+                                                              question={answer.question}
+                                                              answer={answer}
+                                                              showingRecap={showRecap}
+                                                              questionTimeEnded={TimeQuestionEnd}
+                                                    />)
+                                                :
+                                                <QuizItem
+                                                    handleClickOption={
+                                                        (data) => {
+                                                            updateAnswer(data)
+                                                        }}
+                                                    question={questions[currentQuestionIndex]}
+                                                    answer={answerOption[currentQuestionIndex]}
+                                                    questionTimeEnded={TimeQuestionEnd}
+                                                />
+                                            }
+
+                                            {(showRecap || (questions[currentQuestionIndex].mediaType !== "audio")) &&
+                                                <div className="flex gap-8 ">
+                                                    {currentQuestionIndex > 0 &&
+                                                        <button disabled={loadingSaveAnswers} onClick={handleClickPrev}
+                                                                className={`border-2 bg-red-600 text-white px-8 py-2 rounded-md cursor-pointer ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                                            Prev
+                                                        </button>
+                                                    }
+                                                    <button disabled={loadingSaveAnswers} onClick={handleClickNext}
+                                                            className={`border-2 bg-blue-800 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                                        {loadingSaveAnswers && <Spinner/>}
+                                                        {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                <div>
+                                    {/*<div className="bg-white border-2 rounded-md shadow-2xl p-8">
+                                    <p className="text-center py-5">Pas de question dans ce subjet </p>
+                                </div>*/}
                                 </div>
 
-                                <div className="mt-8">
-                                    <div className="flex justify-center flex-col items-center gap-8">
+                            :
+                            <div className="flex justify-center flex-col items-center gap-8">
+                                <div className="">
+                                    Score dernier Test : {score}
+                                </div>
+                                <div className="flex gap-5">
+                                    <Link href="/dashboard"
+                                          className={`border-2 bg-green-600 text-white px-8 py-2 rounded-md cursor-pointer ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                        Retour
+                                    </Link>
 
-                                        {showRecap ?
-                                            answerOption.map((answer: ResponseOption, index: number) =>
-                                                <QuizItem key={index} handleClickOption={
-                                                    (data) => {
-                                                        updateAnswer(data)
-                                                    }}
-                                                          question={answer.question}
-                                                          answer={answer}
-                                                          showingRecap={showRecap}
-                                                          questionTimeEnded={TimeQuestionEnd}
-                                                />)
-                                            :
-                                            <QuizItem
-                                                handleClickOption={
-                                                    (data) => {
-                                                        updateAnswer(data)
-                                                    }}
-                                                question={questions[currentQuestionIndex]}
-                                                answer={answerOption[currentQuestionIndex]}
-                                                questionTimeEnded={TimeQuestionEnd}
-                                            />
-                                        }
+                                    <button disabled={loadingSaveAnswers} onClick={repassSubject}
+                                            className={`border-2 bg-cyan-500 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                        {loadingSaveAnswers && <Spinner/>}
+                                        Repassé l&rsquo;examen
+                                    </button>
 
-                                        {(showRecap || (questions[currentQuestionIndex].mediaType !== "audio")) &&
-                                            <div className="flex gap-8 ">
-                                                {currentQuestionIndex > 0 &&
-                                                    <button disabled={loadingSaveAnswers} onClick={handleClickPrev}
-                                                            className={`border-2 bg-red-600 text-white px-8 py-2 rounded-md cursor-pointer ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
-                                                        Prev
-                                                    </button>
-                                                }
-                                                <button disabled={loadingSaveAnswers} onClick={handleClickNext}
-                                                        className={`border-2 bg-blue-800 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
-                                                    {loadingSaveAnswers && <Spinner/>}
-                                                    {showRecap ? <span>Enregistrer </span> : <span>Suivant</span>}
-                                                </button>
-                                            </div>
-                                        }
+                                </div>
+                                {answerOption.map((answer: ResponseOption, index: number) =>
+                                    <QuizItem key={index} handleClickOption={
+                                        (data) => {
+                                            updateAnswer(data)
+                                        }}
+                                              question={answer.question}
+                                              answer={answer}
+                                              showGoodAnswer={showScore}
+                                              questionTimeEnded={TimeQuestionEnd}
+                                    />
+                                )
+                                }
+                            </div>
+                        /*<div className="bg-white border-2 rounded-xl shadow-2xl p-8">
+                            <p className="text-center py-5"> Vos réponses on été enregistré avec sucess </p>
+                        </div>*/
+
+                        :
+
+                        subject &&
+                        <div className="w-3/5">
+                            <div
+                                className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-[40rem]  rounded-lg font-[sans-serif] overflow-hidden mt-4">
+                                <div className="p-6 relative">
+                                    <h3 className="text-lg font-semibold">{subject.subjectName}</h3>
+                                    <p className="my-2 text-md text-gray-500 leading-relaxed">
+                                        {subject.description}
+                                    </p>
+                                    <p className="text-right font-bold text-sm">Durée
+                                        : <span>{subject.durationInMinutes}</span> Minutes</p>
+
+
+                                    <div className="text-center py-3    ">
+                                        <button onClick={() => setStartSubject(true)}
+                                                className={`border-2 bg-green-600 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
+                                            <span>Commencer </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            :
-                            <div>
-                                {/*<div className="bg-white border-2 rounded-md shadow-2xl p-8">
-                                    <p className="text-center py-5">Pas de question dans ce subjet </p>
-                                </div>*/}
-                            </div>
-
-                        :
-                        <div className="flex justify-center flex-col items-center gap-8">
-                            <div className="">
-                                Score dernier Test : {score}
-                            </div>
-                            <div className="flex gap-5">
-                                <Link href="/dashboard"
-                                        className={`border-2 bg-green-600 text-white px-8 py-2 rounded-md cursor-pointer ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
-                                    Retour
-                                </Link>
-
-                                <button disabled={loadingSaveAnswers} onClick={repassSubject}
-                                        className={`border-2 bg-cyan-500 text-white px-8 py-2 rounded-md ${loadingSaveAnswers ? 'cursor-not-allowed' : ''}`}>
-                                    {loadingSaveAnswers && <Spinner/>}
-                                    Repassé l&rsquo;examen
-                                </button>
-
-                            </div>
-                            {answerOption.map((answer: ResponseOption, index: number) =>
-                                <QuizItem key={index} handleClickOption={
-                                    (data) => {
-                                        updateAnswer(data)
-                                    }}
-                                          question={answer.question}
-                                          answer={answer}
-                                          showGoodAnswer={showScore}
-                                          questionTimeEnded={TimeQuestionEnd}
-                                />
-                            )
-                            }
                         </div>
-                    /*<div className="bg-white border-2 rounded-xl shadow-2xl p-8">
-                        <p className="text-center py-5"> Vos réponses on été enregistré avec sucess </p>
-                    </div>*/
 
 
                 }

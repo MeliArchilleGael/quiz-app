@@ -82,7 +82,7 @@ export default function QuizItem({question,
     return (
         <div className="w-full">
             <div
-                className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-[40rem]  rounded-lg font-[sans-serif] overflow-hidden mt-4">
+                className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] min-w-[40rem] max-w-[50rem] rounded-lg font-[sans-serif] overflow-hidden mt-4">
                 <div className="p-6 relative">
 
                     {question && question.questionType === "multimedia" && question.mediaType === "audio" &&
@@ -105,7 +105,7 @@ export default function QuizItem({question,
 
                     {question && (!readingAudio || showGoodAnswer || showingRecap) &&
                         <div>
-                            <h3 className="text-lg font-semibold mt-4">{question.title}</h3>
+                            <h3 className="text-lg text-wrap font-semibold mt-4">{question.title}</h3>
                             <div className="flex flex-col items-center gap-5 h-full mt-5">
                                 {question.questionType === "multimedia" && question.mediaType === 'image' &&
                                     <div className="">
